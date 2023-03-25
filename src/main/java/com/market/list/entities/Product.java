@@ -8,7 +8,6 @@ import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import java.util.Date;
-import java.util.List;
 
 @NoArgsConstructor
 @Getter
@@ -29,10 +28,10 @@ public class Product {
 
     private String description;
 
+    @Column(length= 1_000_000) //Using base64
+    private String image;
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastModification;
 
-    @ManyToMany(mappedBy = "products")
-    private List<ProductListing> productListings;
 }

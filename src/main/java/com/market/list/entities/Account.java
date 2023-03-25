@@ -48,5 +48,5 @@ public class Account {
     private String password;
 
     @ManyToMany(mappedBy = "accounts")
-    private List<Team> teams;
+    private List<Group> groups;
 }

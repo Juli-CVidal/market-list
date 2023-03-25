@@ -7,29 +7,25 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "product_listing")
+@Table(name = "listing")
 @Entity
-public class ProductListing {
+public class Listing {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne
-    @JoinColumn(name = "account_id")
-    private Account account;
-
 
     @ManyToOne
-    @JoinColumn(name = "team_id")
-    private Team team;
+    @JoinColumn(name ="group_id")
+    private Group group;
 
     @ManyToMany
-    private List<Product> products;
+    private Set<Product> products;
 }
