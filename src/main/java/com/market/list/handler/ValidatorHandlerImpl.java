@@ -19,7 +19,7 @@ public class ValidatorHandlerImpl<T> implements EntityHandler<T> {
     }
 
     @Override
-    public void handleObject(T object) {
+    public void handle(T object) {
         Set<ConstraintViolation<T>> violations = validator.validate(object);
         if (!violations.isEmpty()){
            String errorMessage = violations.stream().map(ConstraintViolation::getMessage)

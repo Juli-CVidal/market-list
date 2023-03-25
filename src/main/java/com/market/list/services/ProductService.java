@@ -29,7 +29,7 @@ public class ProductService {
     @Transactional
     public Product create(Product product){
         handlers.forEach(handler -> {
-            handler.handleObject(product);
+            handler.handle(product);
         });
 
         return productRepository.save(product);
