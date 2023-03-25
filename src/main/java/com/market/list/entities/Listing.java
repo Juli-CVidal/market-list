@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.Set;
+import java.util.List;
 
 @Getter
 @Setter
@@ -26,6 +26,6 @@ public class Listing {
     @JoinColumn(name ="group_id")
     private Group group;
 
-    @ManyToMany
-    private Set<Product> products;
+    @OneToMany(mappedBy = "listing")
+    private List<Product> products;
 }

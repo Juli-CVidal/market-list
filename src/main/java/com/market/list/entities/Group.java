@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -28,8 +28,8 @@ public class Group {
     private GroupType groupType;
 
     @OneToMany(mappedBy = "group", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Listing> listings;
+    private Set<Listing> listings;
 
     @ManyToMany
-    private List<Account> accounts;
+    private Set<Account> accounts;
 }
