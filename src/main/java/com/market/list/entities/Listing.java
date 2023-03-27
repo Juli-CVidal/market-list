@@ -26,6 +26,6 @@ public class Listing {
     @JoinColumn(name ="group_id")
     private Group group;
 
-    @OneToMany(mappedBy = "listing")
+    @OneToMany(cascade = CascadeType.ALL)
     private List<Product> products;
 }

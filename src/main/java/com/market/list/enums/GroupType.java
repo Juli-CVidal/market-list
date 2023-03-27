@@ -1,5 +1,5 @@
 package com.market.list.enums;
 
 public enum GroupType {
-    FRIENDS,PROFESSIONAL,FAMILIAR,OTHER
+    FRIENDS,FAMILIAR,OTHER,PROFESSIONAL
 }

@@ -24,6 +24,7 @@ public class Group {
 
     private String name;
 
+    @Column(length = 15)
     @Enumerated(EnumType.STRING)
     private GroupType groupType;
 

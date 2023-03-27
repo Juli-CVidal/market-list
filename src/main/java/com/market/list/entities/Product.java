@@ -1,5 +1,6 @@
 package com.market.list.entities;
 
+import com.market.list.enums.Measure;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -23,8 +24,6 @@ public class Product {
     @NotBlank(message = "Por favor ingrese un nombre")
     private String name;
 
-    @Min(value = 0, message = "Por favor ingrese una cantidad positiva")
-    private Integer quantity;
 
     private String description;
 
@@ -33,5 +32,18 @@ public class Product {
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastModification;
+
+
+    @Enumerated(EnumType.STRING)
+    @Column(length = 10)
+    private Measure measure;
+
+    @Min(value = 0, message = "Por favor ingrese una cantidad positiva")
+    private Double quantity;
+
+
+    //This field is going to be used as a way for the user to control how many items needs
+    @Min(value = 0, message = "Por favor ingrese una cantidad positiva")
+    private Double preferredQuantity;
 
 }
