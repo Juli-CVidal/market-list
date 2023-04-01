@@ -24,15 +24,13 @@ public class Product {
     @NotBlank(message = "Por favor ingrese un nombre")
     private String name;
 
-
     private String description;
 
-    @Column(length= 1_000_000) //Using base64
+    @Column(length = 1_000_000) //Using base64
     private String image;
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastModification;
-
 
     @Enumerated(EnumType.STRING)
     @Column(length = 10)
@@ -40,7 +38,6 @@ public class Product {
 
     @Min(value = 0, message = "Por favor ingrese una cantidad positiva")
     private Double quantity;
-
 
     //This field is going to be used as a way for the user to control how many items needs
     @Min(value = 0, message = "Por favor ingrese una cantidad positiva")
