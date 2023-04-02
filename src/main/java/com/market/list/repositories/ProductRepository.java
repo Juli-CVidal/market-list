@@ -10,10 +10,11 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 @Repository
-public interface ProductRepository extends JpaRepository<Product,Integer> {
+public interface ProductRepository extends JpaRepository<Product, Integer> {
+
     @Modifying
     @Transactional
     @Query(value = "UPDATE Product p SET p.quantity = :quantity WHERE p.id = :id")
-    //This query will be used when a product has been purchased or used.
+        //This query will be used when a product has been purchased or used.
     void updateProductQuantity(@Param("id") Integer id, @Param("quantity") Integer quantity);
 }

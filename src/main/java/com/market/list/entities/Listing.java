@@ -21,9 +21,8 @@ public class Listing {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-
     @ManyToOne
-    @JoinColumn(name ="group_id")
+    @JoinColumn(name = "group_id")
     private Group group;
 
     @OneToMany(cascade = CascadeType.ALL)

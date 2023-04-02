@@ -11,7 +11,7 @@ import java.util.List;
 
 
 @Service
-public class AccountService{
+public class AccountService {
     private final AccountRepository accountRepository;
 
     @Autowired
@@ -23,17 +23,15 @@ public class AccountService{
     // ======== CREATE ========
 
     @Transactional
-    public Account createAccount( Account account){
+    public Account createAccount(Account account) {
         return accountRepository.save(account);
     }
+
 
     // ======== READ ========
 
     @Transactional(readOnly = true)
-    public List<Account> getAll(){
+    public List<Account> getAll() {
         return accountRepository.findAll();
     }
-
-
-
 }

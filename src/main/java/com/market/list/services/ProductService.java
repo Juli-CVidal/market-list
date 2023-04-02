@@ -5,7 +5,6 @@ import com.market.list.entities.Product;
 import com.market.list.handler.EntityHandler;
 import com.market.list.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,7 +14,6 @@ import java.util.Optional;
 
 @Service
 public class ProductService {
-
 
     private final ProductRepository productRepository;
 
@@ -27,12 +25,15 @@ public class ProductService {
         this.handlers = handlers;
     }
 
+
     // ======== CREATE ========
 
     @Transactional
     public void create(Product product) {
-       handleAndSave(product);
+        handleAndSave(product);
     }
+
+
     // ======== READ ========
 
     @Transactional(readOnly = true)
@@ -44,21 +45,22 @@ public class ProductService {
     // ======== UPDATE ========
 
     @Transactional
-    public void update(Product product){
-      handleAndSave(product);
+    public void update(Product product) {
+        handleAndSave(product);
     }
 
 
     // ======== DELETE ========
 
     @Transactional
-    public void delete(Integer id){
+    public void delete(Integer id) {
         productRepository.deleteById(id);
     }
 
+
     // AUXILIARIES
 
-    private void handleAndSave(Product product){
+    private void handleAndSave(Product product) {
         handlers.forEach(handler -> handler.handle(product));
         product.setLastModification(new Date(System.currentTimeMillis()));
         productRepository.save(product);

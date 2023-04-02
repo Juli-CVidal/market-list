@@ -19,13 +19,11 @@ public interface GroupRepository extends JpaRepository<Group, Integer> {
     @Query(value = "SELECT g FROM Group g WHERE g.id = :id")
     Optional<Group> findById(@Param("id") Integer id);
 
-
     @Transactional(readOnly = true)
     @Query(value = "SELECT g FROM Group g JOIN g.accounts a WHERE a.id = :accountId")
     List<Group> findGroupsByAccount(@Param("accountId") Integer id);
 
-
     @Transactional(readOnly = true)
     @Query(value = "SELECT g FROM Group g WHERE  g.groupType = :type")
-    List<Group> findGroupByType(@Param("type")GroupType type);
+    List<Group> findGroupByType(@Param("type") GroupType type);
 }

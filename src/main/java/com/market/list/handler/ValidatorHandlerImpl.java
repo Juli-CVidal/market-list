@@ -11,8 +11,8 @@ import java.util.stream.Collectors;
 
 @Component
 public class ValidatorHandlerImpl<T> implements EntityHandler<T> {
-    private final Validator validator;
 
+    private final Validator validator;
     @Autowired
     public ValidatorHandlerImpl(Validator validator) {
         this.validator = validator;
@@ -21,10 +21,10 @@ public class ValidatorHandlerImpl<T> implements EntityHandler<T> {
     @Override
     public void handle(T object) {
         Set<ConstraintViolation<T>> violations = validator.validate(object);
-        if (!violations.isEmpty()){
-           String errorMessage = violations.stream().map(ConstraintViolation::getMessage)
-                   .collect(Collectors.joining(", "));
-           throw new MarketException(errorMessage);
+        if (!violations.isEmpty()) {
+            String errorMessage = violations.stream().map(ConstraintViolation::getMessage)
+                    .collect(Collectors.joining(", "));
+            throw new MarketException(errorMessage);
         }
     }
 

@@ -1,13 +1,12 @@
 package com.market.list.controllers;
 
+import com.market.list.entities.ApiResponse;
 import com.market.list.entities.Product;
 import com.market.list.exception.MarketException;
-import com.market.list.entities.ApiResponse;
 import com.market.list.handler.ApiHandler;
 import com.market.list.services.ProductService;
 import com.market.list.utils.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,9 +34,9 @@ public class ProductController {
     public ResponseEntity<ApiResponse<Product>> createProduct(@RequestBody Product product) {
         try {
             productService.create(product);
-            return apiHandler.handleSuccessCreation(product,Constants.PRODUCT_CREATED);
+            return apiHandler.handleSuccessCreation(product, Constants.PRODUCT_CREATED);
         } catch (MarketException me) {
-            return apiHandler.handleExceptionMessage(null,Constants.PRODUCT_HAS_ERRORS(me.getMessage()));
+            return apiHandler.handleExceptionMessage(null, Constants.PRODUCT_HAS_ERRORS(me.getMessage()));
         }
     }
 
@@ -51,7 +50,7 @@ public class ProductController {
             return apiHandler.handleNotFound(Constants.PRODUCT_NOT_FOUND);
 
         }
-        return apiHandler.handleSuccessGet(productOpt.get(),Constants.PRODUCT_FOUND);
+        return apiHandler.handleSuccessGet(productOpt.get(), Constants.PRODUCT_FOUND);
 
     }
 
@@ -62,9 +61,9 @@ public class ProductController {
     public ResponseEntity<ApiResponse<Product>> updateProduct(@RequestBody Product product) {
         try {
             productService.update(product);
-            return apiHandler.handleSuccessModification(product,Constants.PRODUCT_MODIFIED);
+            return apiHandler.handleSuccessModification(product, Constants.PRODUCT_MODIFIED);
         } catch (MarketException me) {
-            return apiHandler.handleExceptionMessage(product,Constants.PRODUCT_HAS_ERRORS(me.getMessage()));
+            return apiHandler.handleExceptionMessage(product, Constants.PRODUCT_HAS_ERRORS(me.getMessage()));
         }
     }
 
@@ -78,7 +77,7 @@ public class ProductController {
             return apiHandler.handleSuccessDeletion(Constants.PRODUCT_DELETED);
 
         } catch (MarketException me) {
-            return apiHandler.handleExceptionMessage(null,Constants.PRODUCT_DELETED);
+            return apiHandler.handleExceptionMessage(null, Constants.PRODUCT_DELETED);
         }
     }
 }

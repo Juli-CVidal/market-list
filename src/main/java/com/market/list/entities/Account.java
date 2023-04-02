@@ -36,14 +36,11 @@ public class Account {
     @Column(unique = true, nullable = false)
     private String email;
 
-
-
-
     //                ^(?=.* [A-Z]) checks if the string contains at least one uppercase letter
     //                (?=.*\d) checks if the string contains at least one digit (0-9)
     //                [A-Za-z\d] permits any uppercase/lowercase/digits
     //                {8,} checks if the string contains at least eight characters
-    @Pattern(regexp="^(?=.*[A-Z])(?=.*\\d)[A-Za-z\\d]{8,}$", message="La contraseña debe tener un mínimo de ocho caracteres, una letra mayúscula y un número")
+    @Pattern(regexp = "^(?=.*[A-Z])(?=.*\\d)[A-Za-z\\d]{8,}$", message = "La contraseña debe tener un mínimo de ocho caracteres, una letra mayúscula y un número")
     @NotBlank(message = "Por favor ingrese una contraseña")
     private String password;
 

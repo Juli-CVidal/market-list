@@ -6,6 +6,6 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class MarketException extends RuntimeException{
+public class MarketException extends RuntimeException {
     private final String errorMessage;
 }
