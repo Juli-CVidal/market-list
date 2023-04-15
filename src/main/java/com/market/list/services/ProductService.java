@@ -2,6 +2,7 @@ package com.market.list.services;
 
 
 import com.market.list.entities.Product;
+import com.market.list.exception.MarketException;
 import com.market.list.handler.EntityHandler;
 import com.market.list.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,18 +11,16 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 @Service
-public class ProductService {
+public class ProductService extends EntityService<Product, Integer> {
 
-    private final ProductRepository productRepository;
 
     private final List<EntityHandler<Product>> handlers;
 
     @Autowired
     public ProductService(ProductRepository productRepository, List<EntityHandler<Product>> handlers) {
-        this.productRepository = productRepository;
+        super(productRepository);
         this.handlers = handlers;
     }
 
@@ -29,24 +28,26 @@ public class ProductService {
     // ======== CREATE ========
 
     @Transactional
-    public void create(Product product) {
-        handleAndSave(product);
+    public Product create(Product product) {
+        handleProduct(product);
+        return super.create(product);
     }
 
 
     // ======== READ ========
 
     @Transactional(readOnly = true)
-    public Optional<Product> findById(Integer id) {
-        return productRepository.findById(id);
+    public Product findById(Integer id) throws MarketException {
+        return super.findById(id);
     }
 
 
     // ======== UPDATE ========
 
     @Transactional
-    public void update(Product product) {
-        handleAndSave(product);
+    public Product update(Product product) {
+        handleProduct(product);
+        return super.update(product);
     }
 
 
@@ -54,15 +55,14 @@ public class ProductService {
 
     @Transactional
     public void delete(Integer id) {
-        productRepository.deleteById(id);
+        super.delete(id);
     }
 
 
     // AUXILIARIES
 
-    private void handleAndSave(Product product) {
+    private void handleProduct(Product product) {
         handlers.forEach(handler -> handler.handle(product));
         product.setLastModification(new Date(System.currentTimeMillis()));
-        productRepository.save(product);
     }
 }

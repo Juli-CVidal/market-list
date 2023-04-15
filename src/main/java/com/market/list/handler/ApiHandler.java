@@ -29,6 +29,10 @@ public class ApiHandler<T> {
         return handleResponse(HttpStatus.NO_CONTENT, null, message);
     }
 
+    public ResponseEntity<ApiResponse<T>> handleSuccessAdding(String message) {
+        return handleResponse(HttpStatus.OK, null, message);
+    }
+
     public ResponseEntity<ApiResponse<T>> handleNotFound(String message) {
         return handleResponse(HttpStatus.NOT_FOUND, null, message);
     }

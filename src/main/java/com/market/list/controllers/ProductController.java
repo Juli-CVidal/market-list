@@ -10,8 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
-
 @RestController
 @RequestMapping(path = "api/v1/product")
 public class ProductController {
@@ -30,13 +28,13 @@ public class ProductController {
 
     // ======== CREATE ========
 
-    @PostMapping()
+    @PostMapping
     public ResponseEntity<ApiResponse<Product>> createProduct(@RequestBody Product product) {
         try {
             productService.create(product);
             return apiHandler.handleSuccessCreation(product, Constants.PRODUCT_CREATED);
         } catch (MarketException me) {
-            return apiHandler.handleExceptionMessage(null, Constants.PRODUCT_HAS_ERRORS(me.getMessage()));
+            return apiHandler.handleExceptionMessage(product, Constants.PRODUCT_HAS_ERRORS(me.getMessage()));
         }
     }
 
@@ -45,19 +43,17 @@ public class ProductController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<Product>> getProductById(@PathVariable("id") Integer id) {
-        Optional<Product> productOpt = productService.findById(id);
-        if (productOpt.isEmpty()) {
-            return apiHandler.handleNotFound(Constants.PRODUCT_NOT_FOUND);
-
+        try {
+            return apiHandler.handleSuccessGet(productService.findById(id), Constants.PRODUCT_FOUND);
+        } catch (MarketException me) {
+            return apiHandler.handleNotFound(me.getMessage());
         }
-        return apiHandler.handleSuccessGet(productOpt.get(), Constants.PRODUCT_FOUND);
-
     }
 
 
     // ======== UPDATE ========
 
-    @PutMapping("/")
+    @PutMapping
     public ResponseEntity<ApiResponse<Product>> updateProduct(@RequestBody Product product) {
         try {
             productService.update(product);
@@ -75,7 +71,6 @@ public class ProductController {
         try {
             productService.delete(id);
             return apiHandler.handleSuccessDeletion(Constants.PRODUCT_DELETED);
-
         } catch (MarketException me) {
             return apiHandler.handleExceptionMessage(null, Constants.PRODUCT_DELETED);
         }
