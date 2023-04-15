@@ -1,11 +1,13 @@
 package com.market.list.exception;
 
 
-import lombok.AllArgsConstructor;
+
 import lombok.Getter;
 
-@Getter
-@AllArgsConstructor
-public class MarketException extends RuntimeException {
-    private final String errorMessage;
+
+public class MarketException extends Exception {
+    public MarketException() {}
+    public MarketException(String message) {
+        super(message);
+    }
 }

@@ -16,7 +16,7 @@ public abstract class EntityService<T,ID>{
     // ======== CREATE ========
 
     @Transactional
-    public T create(T entity){
+    public T create(T entity) throws MarketException {
         return repository.save(entity);
     }
 
@@ -32,7 +32,7 @@ public abstract class EntityService<T,ID>{
     // ======== UPDATE ========
 
     @Transactional
-    public T update(T entity){
+    public T update(T entity) throws MarketException {
         return repository.save(entity);
     }
 

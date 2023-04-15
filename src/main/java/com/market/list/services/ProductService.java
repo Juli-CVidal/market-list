@@ -4,6 +4,7 @@ package com.market.list.services;
 import com.market.list.entities.Product;
 import com.market.list.exception.MarketException;
 import com.market.list.handler.EntityHandler;
+import com.market.list.handler.ValidatorHandlerImpl;
 import com.market.list.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,19 +17,19 @@ import java.util.List;
 public class ProductService extends EntityService<Product, Integer> {
 
 
-    private final List<EntityHandler<Product>> handlers;
+    private final EntityHandler<Product> handler;
 
     @Autowired
-    public ProductService(ProductRepository productRepository, List<EntityHandler<Product>> handlers) {
+    public ProductService(ProductRepository productRepository, ValidatorHandlerImpl<Product> handler) {
         super(productRepository);
-        this.handlers = handlers;
+        this.handler = handler;
     }
 
 
     // ======== CREATE ========
-
+    @Override
     @Transactional
-    public Product create(Product product) {
+    public Product create(Product product) throws MarketException{
         handleProduct(product);
         return super.create(product);
     }
@@ -36,6 +37,7 @@ public class ProductService extends EntityService<Product, Integer> {
 
     // ======== READ ========
 
+    @Override
     @Transactional(readOnly = true)
     public Product findById(Integer id) throws MarketException {
         return super.findById(id);
@@ -44,15 +46,16 @@ public class ProductService extends EntityService<Product, Integer> {
 
     // ======== UPDATE ========
 
+
     @Transactional
-    public Product update(Product product) {
+    public Product update(Product product) throws MarketException{
         handleProduct(product);
         return super.update(product);
     }
 
 
     // ======== DELETE ========
-
+    @Override
     @Transactional
     public void delete(Integer id) {
         super.delete(id);
@@ -61,8 +64,8 @@ public class ProductService extends EntityService<Product, Integer> {
 
     // AUXILIARIES
 
-    private void handleProduct(Product product) {
-        handlers.forEach(handler -> handler.handle(product));
+    private void handleProduct(Product product) throws MarketException{
+        handler.handle(product);
         product.setLastModification(new Date(System.currentTimeMillis()));
     }
 }

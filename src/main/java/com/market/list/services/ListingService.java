@@ -4,7 +4,6 @@ import com.market.list.entities.Listing;
 import com.market.list.entities.Product;
 import com.market.list.exception.MarketException;
 import com.market.list.repositories.ListingRepository;
-import com.market.list.utils.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,7 +20,7 @@ public class ListingService extends EntityService<Listing,Integer>{
     // ======== CREATE ========
     @Override
     @Transactional
-    public Listing create(Listing listing){
+    public Listing create(Listing listing) throws MarketException{
         return super.create(listing);
     }
 
@@ -39,7 +38,7 @@ public class ListingService extends EntityService<Listing,Integer>{
 
     @Override
     @Transactional
-     public Listing update(Listing listing){
+     public Listing update(Listing listing) throws MarketException{
         return super.update(listing);
      }
 
