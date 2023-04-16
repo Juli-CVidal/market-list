@@ -1,7 +1,7 @@
 package com.market.list.repositories;
 
-import com.market.list.entities.Group;
 import com.market.list.enums.GroupType;
+import com.market.list.entities.Group;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

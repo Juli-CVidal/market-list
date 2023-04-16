@@ -13,13 +13,14 @@ import java.util.stream.Collectors;
 public class ValidatorHandlerImpl<T> implements EntityHandler<T> {
 
     private final Validator validator;
+
     @Autowired
     public ValidatorHandlerImpl(Validator validator) {
         this.validator = validator;
     }
 
     @Override
-    public void handle(T object) throws MarketException{
+    public void handle(T object) throws MarketException {
         Set<ConstraintViolation<T>> violations = validator.validate(object);
         if (!violations.isEmpty()) {
             String errorMessage = violations.stream().map(ConstraintViolation::getMessage)

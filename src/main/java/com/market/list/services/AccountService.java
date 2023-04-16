@@ -1,13 +1,13 @@
 package com.market.list.services;
 
 
+import com.market.list.exception.MarketException;
 import com.market.list.entities.Account;
 import com.market.list.repositories.AccountRepository;
+import com.market.list.utils.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 
 @Service
@@ -31,7 +31,7 @@ public class AccountService {
     // ======== READ ========
 
     @Transactional(readOnly = true)
-    public List<Account> getAll() {
-        return accountRepository.findAll();
+    public Account findByEmail(String email) throws MarketException {
+        return accountRepository.findByEmail(email).orElseThrow(() -> new MarketException(Constants.NOT_FOUND));
     }
 }

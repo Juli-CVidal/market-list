@@ -1,10 +1,10 @@
 package com.market.list.controllers;
 
+import com.market.list.exception.MarketException;
+import com.market.list.handler.ApiHandler;
 import com.market.list.entities.ApiResponse;
 import com.market.list.entities.Listing;
 import com.market.list.entities.Product;
-import com.market.list.exception.MarketException;
-import com.market.list.handler.ApiHandler;
 import com.market.list.services.ListingService;
 import com.market.list.utils.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,24 +30,20 @@ public class ListingController {
     // ======== CREATE ========
 
     @PostMapping
-    public ResponseEntity<ApiResponse<Listing>> createListing(@RequestBody Listing listing){
-        try{
-            listingService.create(listing);
-            return apiHandler.handleSuccessCreation(listing,Constants.LISTING_CREATED);
-        } catch (MarketException me){
-            return apiHandler.handleNotFound(me.getMessage());
-        }
+    public ResponseEntity<ApiResponse<Listing>> createListing(@RequestBody Listing listing) {
+        listingService.create(listing);
+        return apiHandler.handleSuccessCreation(listing, Constants.LISTING_CREATED);
     }
 
 
     // ======== READ ========
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<Listing>> getListingById(@PathVariable("id") Integer id){
-        try{
+    public ResponseEntity<ApiResponse<Listing>> getListingById(@PathVariable("id") Integer id) {
+        try {
             return apiHandler.handleSuccessGet
-                            (listingService.findById(id), Constants.LISTING_FOUND);
-        }catch (MarketException me){
+                    (listingService.findById(id), Constants.LISTING_FOUND);
+        } catch (MarketException me) {
             return apiHandler.handleNotFound(me.getMessage());
         }
     }
@@ -56,22 +52,22 @@ public class ListingController {
     // ======== UPDATE ========
 
     @PutMapping
-    public ResponseEntity<ApiResponse<Listing>> updateListing(@RequestBody Listing listing){
-        try{
+    public ResponseEntity<ApiResponse<Listing>> updateListing(@RequestBody Listing listing) {
+        try {
             listingService.update(listing);
-            return apiHandler.handleSuccessModification(listing,Constants.LISTING_MODIFIED);
-        } catch (MarketException me){
+            return apiHandler.handleSuccessModification(listing, Constants.LISTING_MODIFIED);
+        } catch (MarketException me) {
             return apiHandler.handleExceptionMessage(listing, Constants.LISTING_HAS_ERRORS(me.getMessage()));
         }
     }
 
 
     @PutMapping("/{listingId}/product")
-    public ResponseEntity<ApiResponse<Listing>> addProductToListing(@PathVariable("listingId") Integer listingId, Product product){
-        try{
-            listingService.addProductToListing(listingId,product);
+    public ResponseEntity<ApiResponse<Listing>> addProductToListing(@PathVariable("listingId") Integer listingId, Product product) {
+        try {
+            listingService.addProductToListing(listingId, product);
             return apiHandler.handleSuccessAdding(Constants.PRODUCT_ADDED_TO_LIST);
-        } catch (MarketException me){
+        } catch (MarketException me) {
             return apiHandler.handleExceptionMessage(null, Constants.LISTING_HAS_ERRORS(me.getMessage()));
         }
     }
