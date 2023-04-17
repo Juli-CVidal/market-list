@@ -29,7 +29,7 @@ public class ApiHandler<T> {
         return handleResponse(HttpStatus.NO_CONTENT, null, message);
     }
 
-    public ResponseEntity<ApiResponse<T>> handleSuccessAdding(String message) {
+    public ResponseEntity<ApiResponse<T>> handleSuccessAddition(String message) {
         return handleResponse(HttpStatus.OK, null, message);
     }
 
@@ -37,8 +37,13 @@ public class ApiHandler<T> {
         return handleResponse(HttpStatus.NOT_FOUND, null, message);
     }
 
-    private ResponseEntity<ApiResponse<T>> handleResponse(HttpStatus status, T entity, String message) {
-        return ResponseEntity.status(status).body(new ApiResponse<>(entity, message));
+    public ResponseEntity<ApiResponse<T>> handleBadRequest(String message) {
+        return handleResponse(HttpStatus.BAD_REQUEST, null, message);
     }
+
+    private ResponseEntity<ApiResponse<T>> handleResponse(HttpStatus status, T entity, String message) {
+        return ResponseEntity.status(status).body(new ApiResponse<>(entity, status, message));
+    }
+
 
 }

@@ -1,10 +1,10 @@
 package com.market.list.controllers;
 
-import com.market.list.exception.MarketException;
-import com.market.list.handler.ApiHandler;
 import com.market.list.entities.ApiResponse;
 import com.market.list.entities.Listing;
 import com.market.list.entities.Product;
+import com.market.list.exception.MarketException;
+import com.market.list.handler.ApiHandler;
 import com.market.list.services.ListingService;
 import com.market.list.utils.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,11 +62,23 @@ public class ListingController {
     }
 
 
+    // ======== DELETE ========
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ApiResponse<Listing>> deleteAccount(@PathVariable Integer id) {
+        try {
+            listingService.delete(id);
+            return apiHandler.handleSuccessDeletion(Constants.LISTING_DELETED);
+        } catch (MarketException me) {
+            return apiHandler.handleExceptionMessage(null, me.getMessage());
+        }
+    }
+
     @PutMapping("/{listingId}/product")
     public ResponseEntity<ApiResponse<Listing>> addProductToListing(@PathVariable("listingId") Integer listingId, Product product) {
         try {
             listingService.addProductToListing(listingId, product);
-            return apiHandler.handleSuccessAdding(Constants.PRODUCT_ADDED_TO_LIST);
+            return apiHandler.handleSuccessAddition(Constants.PRODUCT_ADDED_TO_LIST);
         } catch (MarketException me) {
             return apiHandler.handleExceptionMessage(null, Constants.LISTING_HAS_ERRORS(me.getMessage()));
         }

@@ -1,29 +1,37 @@
 package com.market.list.services;
 
 
-import com.market.list.exception.MarketException;
 import com.market.list.entities.Account;
+import com.market.list.exception.MarketException;
+import com.market.list.handler.EntityHandler;
+import com.market.list.handler.ValidatorHandlerImpl;
 import com.market.list.repositories.AccountRepository;
 import com.market.list.utils.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 
 @Service
 public class AccountService {
     private final AccountRepository accountRepository;
 
+    private final EntityHandler<Account> validationHandler;
+
     @Autowired
-    public AccountService(AccountRepository accountRepository) {
+    public AccountService(AccountRepository accountRepository, ValidatorHandlerImpl<Account> validationHandler) {
         this.accountRepository = accountRepository;
+        this.validationHandler = validationHandler;
     }
 
 
     // ======== CREATE ========
 
     @Transactional
-    public Account createAccount(Account account) {
+    public Account create(Account account) throws MarketException {
+        validationHandler.handle(account);
         return accountRepository.save(account);
     }
 
@@ -31,7 +39,32 @@ public class AccountService {
     // ======== READ ========
 
     @Transactional(readOnly = true)
-    public Account findByEmail(String email) throws MarketException {
-        return accountRepository.findByEmail(email).orElseThrow(() -> new MarketException(Constants.NOT_FOUND));
+    public Account findAccount(Integer id, String email) throws MarketException {
+        Optional<Account> account = Optional.empty();
+        if (null != id) {
+            account = accountRepository.findById(id);
+        }
+        if (account.isEmpty() && null != email) {
+            account = accountRepository.findByEmail(email);
+        }
+        return account.orElseThrow(() -> new MarketException(Constants.NOT_FOUND));
+    }
+
+
+    // ======== UPDATE ========
+
+    @Transactional
+    public Account update(Account account) throws MarketException {
+        validationHandler.handle(account);
+        return accountRepository.save(account);
+    }
+
+    // ======== DELETE ========
+
+    @Transactional
+    public void delete(Integer id) throws MarketException {
+        if (null != findAccount(id, null)) {
+            accountRepository.deleteById(id);
+        }
     }
 }

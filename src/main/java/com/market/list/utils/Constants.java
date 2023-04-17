@@ -2,7 +2,15 @@ package com.market.list.utils;
 
 public class Constants {
 
-    public static final String NOT_FOUND = "El elemento solicitado no ha sido encontrado";
+    // ======== ACCOUNT ========
+    public static final String ACCOUNT_CREATED = "La cuenta se ha creado exitosamente!";
+    public static final String ACCOUNT_FOUND = "La cuenta se ha encontrado exitosamente";
+    public static final String ACCOUNT_MODIFIED = "La cuenta se ha modificado exitosamente";
+    public static final String ACCOUNT_DELETED = "La cuenta ha sido eliminada, espero nos volvamos a ver!";
+
+    public static String ACCOUNT_HAS_ERRORS(String errors) {
+        return "Ha ocurrido un error al crear la cuenta: \n" + errors;
+    }
 
     // ======== PRODUCT ========
     public static final String PRODUCT_CREATED = "El producto se ha creado exitosamente";
@@ -23,6 +31,7 @@ public class Constants {
 
     public static final String LISTING_FOUND = "La lista se ha encontrado exitosamente";
     public static final String LISTING_MODIFIED = "La lista se ha modificado exitosamente";
+    public static final String LISTING_DELETED = "La lista se ha eliminado exitosamente";
 
     public static String LISTING_HAS_ERRORS(String errors) {
         return "Ha ocurrido un error con la lista: \n" + errors;
@@ -30,5 +39,8 @@ public class Constants {
 
 
     // ======== AUXILIARIES ========
+    public static final String NOT_FOUND = "El elemento solicitado no ha sido encontrado";
+
+    public static final String NO_PARAMS = "No se han introducido parámetros de búsqueda, reintente";
 
 }

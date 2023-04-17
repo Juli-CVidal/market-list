@@ -1,8 +1,8 @@
 package com.market.list.services;
 
-import com.market.list.exception.MarketException;
 import com.market.list.entities.Listing;
 import com.market.list.entities.Product;
+import com.market.list.exception.MarketException;
 import com.market.list.repositories.ListingRepository;
 import com.market.list.utils.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +43,15 @@ public class ListingService {
         return listingRepository.save(listing);
     }
 
+
+    // ======== DELETE ========
+
+    @Transactional
+    public void delete(Integer id) throws MarketException {
+        if (null != findById(id)) {
+            listingRepository.deleteById(id);
+        }
+    }
 
     // ======== OTHERS ========
 

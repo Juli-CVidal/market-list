@@ -8,7 +8,6 @@ import lombok.Setter;
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
-import java.util.Date;
 
 @NoArgsConstructor
 @Getter
@@ -30,8 +29,8 @@ public class Product {
     @Column(length = 1_000_000) //Using base64
     private String image;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date lastModification;
+
+    private String lastModification;
 
     @Enumerated(EnumType.STRING)
     @Column(length = 10)

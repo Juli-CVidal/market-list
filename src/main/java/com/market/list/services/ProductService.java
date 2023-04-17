@@ -1,16 +1,17 @@
 package com.market.list.services;
 
 
+import com.market.list.entities.Product;
 import com.market.list.exception.MarketException;
 import com.market.list.handler.EntityHandler;
 import com.market.list.handler.ValidatorHandlerImpl;
-import com.market.list.entities.Product;
 import com.market.list.repositories.ProductRepository;
 import com.market.list.utils.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Service
@@ -57,8 +58,10 @@ public class ProductService {
     // ======== DELETE ========
 
     @Transactional
-    public void delete(Integer id) {
-        productRepository.deleteById(id);
+    public void delete(Integer id) throws MarketException {
+        if (null != findById(id)) {
+            productRepository.deleteById(id);
+        }
     }
 
 
@@ -66,6 +69,7 @@ public class ProductService {
 
     private void handleProduct(Product product) throws MarketException {
         handler.handle(product);
-        product.setLastModification(new Date(System.currentTimeMillis()));
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy - HH:mm");
+        product.setLastModification(formatter.format(new Date(System.currentTimeMillis())));
     }
 }
