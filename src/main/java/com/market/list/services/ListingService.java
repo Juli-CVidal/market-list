@@ -1,5 +1,6 @@
 package com.market.list.services;
 
+import com.market.list.entities.Group;
 import com.market.list.entities.Listing;
 import com.market.list.entities.Product;
 import com.market.list.exception.MarketException;
@@ -15,10 +16,14 @@ public class ListingService {
 
     private final ListingRepository listingRepository;
 
+    private final ProductService productService;
+
     @Autowired
-    public ListingService(ListingRepository listingRepository) {
+    public ListingService(ListingRepository listingRepository, ProductService productService) {
         this.listingRepository = listingRepository;
+        this.productService = productService;
     }
+
 
     // ======== CREATE ========
     @Transactional
@@ -39,8 +44,8 @@ public class ListingService {
 
 
     @Transactional
-    public Listing update(Listing listing) throws MarketException {
-        return listingRepository.save(listing);
+    public void update(Listing listing) throws MarketException {
+        listingRepository.save(listing);
     }
 
 
@@ -53,12 +58,36 @@ public class ListingService {
         }
     }
 
-    // ======== OTHERS ========
+
+    // ======== RELATED TO PRODUCT MANAGEMENT ========
 
     @Transactional
-    public void addProductToListing(Integer listingId, Product product) throws MarketException {
+    public void addProductToListing(Integer listingId, Integer productId) throws MarketException {
         Listing listing = findById(listingId);
+        Product product = productService.findById(productId);
         listing.getProducts().add(product);
         update(listing);
+    }
+
+
+    @Transactional
+    public void removeProductFromListing(Integer listingId, Integer productId) throws MarketException {
+        Listing listing = findById(listingId);
+        Product product = productService.findById(productId);
+
+        //if the product was in the list, then gets removed from the listing and can be deleted from the Product table
+        //otherwise, is unnecessary to alter the listing
+        if (listing.getProducts().remove(product)) {
+            productService.delete(productId);
+            update(listing);
+        }
+    }
+
+    // ======== RELATED TO GROUP MANAGEMENT ========
+
+    @Transactional
+    public void setGroupToListing(Listing listing, Group group) throws MarketException {
+        listing.setGroup(group);
+        this.update(listing);
     }
 }

@@ -2,6 +2,7 @@ package com.market.list.services;
 
 
 import com.market.list.entities.Account;
+import com.market.list.entities.Group;
 import com.market.list.exception.MarketException;
 import com.market.list.handler.EntityHandler;
 import com.market.list.handler.ValidatorHandlerImpl;
@@ -65,6 +66,21 @@ public class AccountService {
     public void delete(Integer id) throws MarketException {
         if (null != findAccount(id, null)) {
             accountRepository.deleteById(id);
+        }
+    }
+
+    // ======== RELATED TO GROUP MANAGEMENT ========
+
+    @Transactional
+    public void addGroupToAccount(Account account, Group group) throws MarketException {
+        account.getGroups().add(group);
+        this.update(account);
+    }
+
+    @Transactional
+    public void removeGroupFromAccount(Account account, Group group) throws MarketException {
+        if (account.getGroups().remove(group)){
+            this.update(account);
         }
     }
 }

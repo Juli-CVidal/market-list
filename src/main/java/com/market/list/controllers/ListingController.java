@@ -74,15 +74,28 @@ public class ListingController {
         }
     }
 
-    @PutMapping("/{listingId}/product")
-    public ResponseEntity<ApiResponse<Listing>> addProductToListing(@PathVariable("listingId") Integer listingId, Product product) {
+
+    // ======== RELATED TO ADD OR DELETE A PRODUCT ========
+
+    @PutMapping("/{listingId}/add/{productId}}")
+    public ResponseEntity<ApiResponse<Listing>> addProductToListing(@PathVariable("listingId") Integer listingId, @PathVariable("productId") Integer productId) {
         try {
-            listingService.addProductToListing(listingId, product);
+            listingService.addProductToListing(listingId, productId);
             return apiHandler.handleSuccessAddition(Constants.PRODUCT_ADDED_TO_LIST);
         } catch (MarketException me) {
             return apiHandler.handleExceptionMessage(null, Constants.LISTING_HAS_ERRORS(me.getMessage()));
         }
     }
 
+
+    @PutMapping("/{listingId}/remove/{productId}")
+    public ResponseEntity<ApiResponse<Listing>> removeProductFromListing(@PathVariable("listingId") Integer listingId,@PathVariable("productId") Integer productId){
+        try{
+            listingService.removeProductFromListing(listingId,productId);
+            return apiHandler.handleSuccessRemoving(Constants.PRODUCT_REMOVED_FROM_LIST);
+        } catch(MarketException me){
+            return apiHandler.handleExceptionMessage(null,Constants.LISTING_HAS_ERRORS(me.getMessage()));
+        }
+    }
 
 }

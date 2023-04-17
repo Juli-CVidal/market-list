@@ -22,6 +22,7 @@ public class Constants {
     public static final String PRODUCT_DELETED = "El producto se ha modificado";
     public static final String PRODUCT_ADDED_TO_LIST = "El producto ha sido añadido a la lista";
 
+    public static final String PRODUCT_REMOVED_FROM_LIST = "El producto ha sido eliminado de la lista";
     public static String PRODUCT_HAS_ERRORS(String errors) {
         return "Ha ocurrido un error con el producto: \n" + errors;
     }

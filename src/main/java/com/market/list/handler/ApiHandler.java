@@ -41,6 +41,10 @@ public class ApiHandler<T> {
         return handleResponse(HttpStatus.BAD_REQUEST, null, message);
     }
 
+    public ResponseEntity<ApiResponse<T>> handleSuccessRemoving(String message) {
+        return handleResponse(HttpStatus.OK,null,message);
+    }
+
     private ResponseEntity<ApiResponse<T>> handleResponse(HttpStatus status, T entity, String message) {
         return ResponseEntity.status(status).body(new ApiResponse<>(entity, status, message));
     }
