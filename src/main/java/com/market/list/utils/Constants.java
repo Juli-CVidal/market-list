@@ -12,6 +12,17 @@ public class Constants {
         return "Ha ocurrido un error al crear la cuenta: \n" + errors;
     }
 
+    // ======== GROUP ========
+    public static final String GROUP_CREATED = "El grupo se ha creado exitosamente";
+    public static final String GROUP_FOUND = "El grupo se ha encontrado exitosamente";
+
+    public static final String GROUP_MODIFIED = "El grupo se ha modificado exitosamente";
+    public static final String GROUP_DELETED = "El grupo se ha eliminado exitosamente";
+
+    public static final String NEW_OWNER = "El nuevo dueño se ha asignado exitosamente";
+    public static String GROUP_HAS_ERRORS(String errors) {
+        return "Ha ocurrido un error al crear el grupo: \n" + errors;
+    }
     // ======== PRODUCT ========
     public static final String PRODUCT_CREATED = "El producto se ha creado exitosamente";
 
@@ -44,4 +55,5 @@ public class Constants {
 
     public static final String NO_PARAMS = "No se han introducido parámetros de búsqueda, reintente";
 
+    public static final String FORBIDDEN = "No tienes los permisos necesarios";
 }

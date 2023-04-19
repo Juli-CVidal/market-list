@@ -45,6 +45,10 @@ public class ApiHandler<T> {
         return handleResponse(HttpStatus.OK,null,message);
     }
 
+    public ResponseEntity<ApiResponse<T>> handleForbiddenMessage(String message) {
+        return handleResponse(HttpStatus.FORBIDDEN,null,message);
+    }
+
     private ResponseEntity<ApiResponse<T>> handleResponse(HttpStatus status, T entity, String message) {
         return ResponseEntity.status(status).body(new ApiResponse<>(entity, status, message));
     }

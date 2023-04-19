@@ -77,7 +77,8 @@ public class ListingController {
 
     // ======== RELATED TO ADD OR DELETE A PRODUCT ========
 
-    @PutMapping("/{listingId}/add/{productId}}")
+
+    @PutMapping("/{listingId}/add/{productId}")
     public ResponseEntity<ApiResponse<Listing>> addProductToListing(@PathVariable("listingId") Integer listingId, @PathVariable("productId") Integer productId) {
         try {
             listingService.addProductToListing(listingId, productId);

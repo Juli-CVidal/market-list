@@ -5,6 +5,7 @@ import com.market.list.enums.GroupType;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.Set;
 
 @Getter
@@ -28,6 +29,10 @@ public class Group {
 
     @OneToMany(mappedBy = "group", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Listing> listings;
+
+    @OneToOne
+    @NotNull(message = "No se ha indicado el dueño del grupo")
+    private Account owner;
 
     @ManyToMany
     private Set<Account> accounts;
