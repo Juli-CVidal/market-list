@@ -172,8 +172,13 @@ public class GroupController {
 
     @PutMapping("/removeListing/{groupId}")
     public ResponseEntity<ApiResponse<Group>> removeListingFromGroup(@PathVariable("groupId") Integer groupId,
-                                                                     @RequestParam(value = "listingId", required = false) Integer listingId) {
+                                                                     @RequestParam(value = "listingId", required = false) Integer listingId,
+                                                                     @RequestBody Integer ownerId) {
         try {
+            Group group = groupService.findById(groupId);
+            if (isNotOwner(group, ownerId)) {
+                return apiHandler.handleForbidden();
+            }
 
             if (null == listingId) {
                 return apiHandler.handleBadRequest(Constants.NO_PARAMS);
