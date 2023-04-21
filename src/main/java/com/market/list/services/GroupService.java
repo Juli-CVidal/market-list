@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Objects;
+
 @Service
 public class GroupService {
     private final GroupRepository groupRepository;
@@ -28,7 +30,7 @@ public class GroupService {
     // ========= CREATE ========
 
     @Transactional
-    public Group create(Group group){
+    public Group create(Group group) {
         return groupRepository.save(group);
     }
 
@@ -38,7 +40,6 @@ public class GroupService {
     public Group findById(Integer id) throws MarketException {
         return groupRepository.findById(id).orElseThrow(() -> new MarketException(Constants.NOT_FOUND));
     }
-
 
 
     // ======== UPDATE ========
@@ -53,7 +54,7 @@ public class GroupService {
     @Transactional
     public void delete(Integer id) throws MarketException {
         Group group = this.findById(id);
-        if (null != group && group.getAccounts().isEmpty()){
+        if (null != group && group.getAccounts().isEmpty()) {
             groupRepository.delete(group);
         }
     }
@@ -71,21 +72,21 @@ public class GroupService {
     }
 
     @Transactional
-    public Group addListingToGroup(Integer groupdId, Integer listingId) throws MarketException{
+    public Group addListingToGroup(Integer groupdId, Integer listingId) throws MarketException {
         Group group = this.findById(groupdId);
         Listing listing = listingService.findById(listingId);
         group.getListings().add(listing);
-        listingService.setGroupToListing(listing,group);
+        listingService.setGroupToListing(listing, group);
 
         return this.update(group);
     }
 
     @Transactional
-    public void removeListingFromGroup(Integer groupId, Integer listId) throws  MarketException{
+    public void removeListingFromGroup(Integer groupId, Integer listId) throws MarketException {
         Group group = this.findById(groupId);
         Listing listing = listingService.findById(listId);
 
-        if (group.getListings().remove(listing)){
+        if (group.getListings().remove(listing)) {
             listingService.delete(listing.getId());
             update(group);
         }
@@ -94,32 +95,42 @@ public class GroupService {
     @Transactional(readOnly = true)
     public Account findAccountInGroup(Integer groupId, Integer accountId) throws MarketException {
         Group group = this.findById(groupId);
-        Account account = accountService.findAccount(accountId,null);
-        if (!account.getGroups().contains(group)){
+        Account account = accountService.findAccount(accountId, null);
+        if (!account.getGroups().contains(group)) {
             throw new MarketException(Constants.NOT_FOUND);
         }
         return account;
     }
 
     @Transactional
-    public Group addAccountToGroup(Integer groupId, Integer accountId) throws MarketException {
+    public void transferOwnership(Group group, Integer newOwnerId) throws MarketException {
+        Account account = accountService.findAccount(newOwnerId, null);
+        group.setOwner(account);
+        group.getAccounts().remove(account);
+        update(group);
+    }
+
+
+    @Transactional
+    public void addAccountToGroup(Integer groupId, Integer accountId) throws MarketException {
         Group group = this.findById(groupId);
-        Account account = accountService.findAccount(accountId,null);
-        accountService.addGroupToAccount(account,group);
+        Account account = accountService.findAccount(accountId, null);
+        accountService.addGroupToAccount(account, group);
 
         group.getAccounts().add(account);
-        return this.update(group);
+        update(group);
     }
 
     @Transactional
-    public Group removeAccountFromGroup(Integer groupId, Integer accountId) throws MarketException {
+    public void removeAccountFromGroup(Integer groupId, Integer accountId) throws MarketException {
         Group group = this.findById(groupId);
-        Account account = accountService.findAccount(accountId,null);
+        Account account = accountService.findAccount(accountId, null);
 
-        if (group.getAccounts().remove(account)){
-            accountService.removeGroupFromAccount(account,group);
+        if (group.getAccounts().remove(account)) {
+            accountService.removeGroupFromAccount(account, group);
         }
-        return this.update(group);
+        update(group);
     }
+
 
 }

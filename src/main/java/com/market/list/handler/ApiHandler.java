@@ -1,6 +1,7 @@
 package com.market.list.handler;
 
 import com.market.list.entities.ApiResponse;
+import com.market.list.utils.Constants;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -45,8 +46,8 @@ public class ApiHandler<T> {
         return handleResponse(HttpStatus.OK,null,message);
     }
 
-    public ResponseEntity<ApiResponse<T>> handleForbiddenMessage(String message) {
-        return handleResponse(HttpStatus.FORBIDDEN,null,message);
+    public ResponseEntity<ApiResponse<T>> handleForbidden() {
+        return handleResponse(HttpStatus.FORBIDDEN,null, Constants.FORBIDDEN);
     }
 
     private ResponseEntity<ApiResponse<T>> handleResponse(HttpStatus status, T entity, String message) {

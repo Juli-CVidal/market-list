@@ -1,6 +1,5 @@
 package com.market.list.controllers;
 
-import com.market.list.entities.Account;
 import com.market.list.entities.ApiResponse;
 import com.market.list.entities.Group;
 import com.market.list.exception.MarketException;
@@ -36,7 +35,7 @@ public class GroupController {
     // ======== CREATE ========
 
     @PostMapping
-    public ResponseEntity<ApiResponse<Group>> createGroup(@RequestBody Group group, @RequestParam(value = "ownerId") Integer ownerId) {
+    public ResponseEntity<ApiResponse<Group>> createGroup(@RequestBody Group group, @RequestParam("ownerId") Integer ownerId) {
         try {
             group.setOwner(accountService.findAccount(ownerId, null));
             groupService.create(group);
@@ -49,8 +48,12 @@ public class GroupController {
     // ======== READ ========
 
     @GetMapping
-    public ResponseEntity<ApiResponse<Group>> getGroupById(@RequestParam(value = "id") Integer id) {
+    public ResponseEntity<ApiResponse<Group>> getGroupById(@RequestParam(value = "id", required = false) Integer id) {
         try {
+            if (null == id) {
+                return apiHandler.handleBadRequest(Constants.NO_PARAMS);
+            }
+
             return apiHandler.handleSuccessGet(groupService.findById(id), Constants.GROUP_FOUND);
         } catch (MarketException me) {
             return apiHandler.handleNotFound(Constants.NOT_FOUND);
@@ -68,16 +71,17 @@ public class GroupController {
     // ======== DELETE ========
 
     @PutMapping("/{groupId}")
-    public ResponseEntity<ApiResponse<Group>> removeGroup(@PathVariable("groupId") Integer groupId, @RequestParam(value = "ownerId") Integer ownerId){
-        try{
+    public ResponseEntity<ApiResponse<Group>> removeGroup(@PathVariable("groupId") Integer groupId,
+                                                          @RequestBody Integer ownerId) {
+        try {
             Group group = groupService.findById(groupId);
-            if (!Objects.equals(group.getOwner().getId(), ownerId)){
-                return apiHandler.handleForbiddenMessage(Constants.FORBIDDEN);
+            if (isNotOwner(group, ownerId)) {
+                return apiHandler.handleForbidden();
             }
             groupService.delete(groupId);
             return apiHandler.handleSuccessDeletion(Constants.GROUP_DELETED);
-        } catch (MarketException me){
-            return apiHandler.handleExceptionMessage(null,Constants.NOT_FOUND);
+        } catch (MarketException me) {
+            return apiHandler.handleExceptionMessage(null, Constants.NOT_FOUND);
         }
 
     }
@@ -85,15 +89,105 @@ public class GroupController {
     // ======== RELATED TO ACCOUNT MANAGEMENT ========
 
     @PutMapping("/transfer/{groupId}")
-    public ResponseEntity<ApiResponse<Group>> transferOwnership(@PathVariable("groupId") Integer groupId, @RequestParam(value = "newOwnerId") Integer newOwnerId) {
+    public ResponseEntity<ApiResponse<Group>> transferOwnership(@PathVariable("groupId") Integer groupId,
+                                                                @RequestParam("newOwnerId") Integer newOwnerId,
+                                                                @RequestBody Integer ownerId) {
         try {
             Group group = groupService.findById(groupId);
-            Account newOwner = accountService.findAccount(newOwnerId, null);
-            group.setOwner(newOwner);
-            group.getAccounts().remove(newOwner);
+            if (isNotOwner(group, ownerId)) {
+                return apiHandler.handleForbidden();
+            }
+
+            groupService.transferOwnership(group, newOwnerId);
             return apiHandler.handleSuccessModification(group, Constants.NEW_OWNER);
         } catch (MarketException me) {
             return apiHandler.handleNotFound(me.getMessage());
         }
+    }
+
+    @PutMapping("/addAccount/{groupId}")
+    public ResponseEntity<ApiResponse<Group>> addAccountToGroup(@PathVariable("groupId") Integer groupId,
+                                                                @RequestParam(value = "accountId", required = false) Integer accountId,
+                                                                @RequestBody Integer ownerId) {
+        try {
+            Group group = groupService.findById(groupId);
+            if (isNotOwner(group, ownerId)) {
+                return apiHandler.handleForbidden();
+            }
+
+            if (null == accountId) {
+                return apiHandler.handleBadRequest(Constants.NO_PARAMS);
+            }
+
+            groupService.addAccountToGroup(groupId, accountId);
+            return apiHandler.handleSuccessAddition(Constants.ACCOUNT_ADDED_TO_GROUP);
+        } catch (MarketException me) {
+            return apiHandler.handleExceptionMessage(null, Constants.GROUP_HAS_ERRORS(me.getMessage()));
+        }
+    }
+
+    @PutMapping("/removeAccount/{groupId}")
+    public ResponseEntity<ApiResponse<Group>> removeAccountFromGroup(@PathVariable("groupId") Integer groupId,
+                                                                     @RequestParam(value = "accountId", required = false) Integer accountId,
+                                                                     @RequestBody Integer ownerId) {
+        try {
+            Group group = groupService.findById(groupId);
+            if (isNotOwner(group, ownerId)) {
+                return apiHandler.handleForbidden();
+            }
+
+            if (null == accountId) {
+                return apiHandler.handleBadRequest(Constants.NO_PARAMS);
+            }
+
+            groupService.removeAccountFromGroup(groupId, accountId);
+            return apiHandler.handleSuccessRemoving(Constants.ACCOUNT_REMOVED_FROM_GROUP);
+        } catch (MarketException me) {
+            return apiHandler.handleExceptionMessage(null, Constants.GROUP_HAS_ERRORS(me.getMessage()));
+        }
+    }
+
+    // ======== RELATED TO LISTING MANAGEMENT ========
+
+    @PutMapping("/addListing/{groupId}")
+    public ResponseEntity<ApiResponse<Group>> addListingToGroup(@PathVariable("groupId") Integer groupId,
+                                                                @RequestParam(value = "listingId", required = false) Integer listingId,
+                                                                @RequestBody Integer ownerId) {
+        try {
+            Group group = groupService.findById(groupId);
+            if (isNotOwner(group, ownerId)) {
+                return apiHandler.handleForbidden();
+            }
+
+            if (null == listingId) {
+                return apiHandler.handleBadRequest(Constants.NO_PARAMS);
+            }
+
+            groupService.addListingToGroup(groupId, listingId);
+            return apiHandler.handleSuccessAddition(Constants.LISTING_ADDED_TO_GROUP);
+        } catch (MarketException me) {
+            return apiHandler.handleExceptionMessage(null, Constants.GROUP_HAS_ERRORS(me.getMessage()));
+        }
+    }
+
+    @PutMapping("/removeListing/{groupId}")
+    public ResponseEntity<ApiResponse<Group>> removeListingFromGroup(@PathVariable("groupId") Integer groupId,
+                                                                     @RequestParam(value = "listingId", required = false) Integer listingId) {
+        try {
+
+            if (null == listingId) {
+                return apiHandler.handleBadRequest(Constants.NO_PARAMS);
+            }
+
+            groupService.removeListingFromGroup(groupId, listingId);
+            return apiHandler.handleSuccessRemoving(Constants.LISTING_REMOVED_FROM_GROUP);
+        } catch (MarketException me) {
+            return apiHandler.handleExceptionMessage(null, me.getMessage());
+        }
+    }
+
+
+    private boolean isNotOwner(Group group, Integer accountId) {
+        return !Objects.equals(group.getOwner().getId(), accountId);
     }
 }
