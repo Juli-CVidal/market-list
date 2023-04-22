@@ -1,5 +1,6 @@
 package com.market.list.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -39,8 +40,11 @@ public class Account {
     //                {8,} checks if the string contains at least eight characters
     @Pattern(regexp = "^(?=.*[A-Z])(?=.*\\d)[A-Za-z\\d]{8,}$", message = "La contraseña debe tener un mínimo de ocho caracteres, una letra mayúscula y un número")
     @NotBlank(message = "Por favor ingrese una contraseña")
+    @JsonIgnore
     private String password;
 
+
+    @JsonIgnore
     @ManyToMany(mappedBy = "accounts")
     private List<Group> groups;
 }

@@ -38,11 +38,14 @@ public class ListingController {
 
     // ======== READ ========
 
-    @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<Listing>> getListingById(@PathVariable("id") Integer id) {
+    @GetMapping
+    public ResponseEntity<ApiResponse<Listing>> getListingById(@RequestParam(value = "id", required = false) Integer id) {
         try {
-            return apiHandler.handleSuccessGet
-                    (listingService.findById(id), Constants.LISTING_FOUND);
+            if (null == id){
+                return apiHandler.handleBadRequest(Constants.NO_PARAMS);
+            }
+
+            return apiHandler.handleSuccessGet(listingService.findById(id), Constants.LISTING_FOUND);
         } catch (MarketException me) {
             return apiHandler.handleNotFound(me.getMessage());
         }

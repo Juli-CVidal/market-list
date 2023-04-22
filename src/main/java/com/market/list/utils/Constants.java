@@ -87,15 +87,15 @@ public class Constants {
 
     public static final String LISTING_CREATED = successMessage(LISTING_ENTITY, CREATED);
 
-    public static final String LISTING_FOUND = successMessage(PRODUCT_ENTITY, FOUND);
+    public static final String LISTING_FOUND = successMessage(LISTING_ENTITY, FOUND);
 
-    public static final String LISTING_MODIFIED = successMessage(PRODUCT_ENTITY, MODIFIED);
+    public static final String LISTING_MODIFIED = successMessage(LISTING_ENTITY, MODIFIED);
 
-    public static final String LISTING_DELETED = successMessage(PRODUCT_ENTITY, DELETED);
+    public static final String LISTING_DELETED = successMessage(LISTING_ENTITY, DELETED);
 
-    public static final String LISTING_ADDED_TO_GROUP = successMessage(PRODUCT_ENTITY, ADDED_TO_GROUP);
+    public static final String LISTING_ADDED_TO_GROUP = successMessage(LISTING_ENTITY, ADDED_TO_GROUP);
 
-    public static final String LISTING_REMOVED_FROM_GROUP = successMessage(PRODUCT_ENTITY, REMOVED_FROM_GROUP);
+    public static final String LISTING_REMOVED_FROM_GROUP = successMessage(LISTING_ENTITY, REMOVED_FROM_GROUP);
 
     public static String LISTING_HAS_ERRORS(String errors) {
         return "Ha ocurrido un error con la lista: \n" + errors;
@@ -103,7 +103,7 @@ public class Constants {
 
 
     // ======== AUXILIARIES ========
-    private static final String SUCCESSFULLY = " exitosamente!";
+    private static final String SUCCESSFULLY = "exitosamente!";
 
     private static String successMessage(String entity, String action) {
         return entity + " " + action + " " + SUCCESSFULLY;

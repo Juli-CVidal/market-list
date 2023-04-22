@@ -70,7 +70,7 @@ public class GroupController {
 
     // ======== DELETE ========
 
-    @PutMapping("/{groupId}")
+    @DeleteMapping("/{groupId}")
     public ResponseEntity<ApiResponse<Group>> removeGroup(@PathVariable("groupId") Integer groupId,
                                                           @RequestBody Integer ownerId) {
         try {

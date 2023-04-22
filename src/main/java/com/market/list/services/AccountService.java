@@ -9,6 +9,7 @@ import com.market.list.handler.ValidatorHandlerImpl;
 import com.market.list.repositories.AccountRepository;
 import com.market.list.utils.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,6 +34,7 @@ public class AccountService {
     @Transactional
     public Account create(Account account) throws MarketException {
         validationHandler.handle(account);
+        account.setPassword(new BCryptPasswordEncoder().encode(account.getPassword()));
         return accountRepository.save(account);
     }
 
@@ -79,7 +81,7 @@ public class AccountService {
 
     @Transactional
     public void removeGroupFromAccount(Account account, Group group) throws MarketException {
-        if (account.getGroups().remove(group)){
+        if (account.getGroups().remove(group)) {
             this.update(account);
         }
     }
