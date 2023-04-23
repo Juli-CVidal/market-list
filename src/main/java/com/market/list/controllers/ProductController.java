@@ -22,7 +22,6 @@ public class ProductController {
     public ProductController(ProductService productService, ApiHandler<Product> apiHandler) {
         this.productService = productService;
         this.apiHandler = apiHandler;
-
     }
 
 
@@ -41,8 +40,8 @@ public class ProductController {
 
     // ======== READ ========
 
-    @GetMapping("/")
-    public ResponseEntity<ApiResponse<Product>> getProductById(@RequestParam("id") String id) {
+    @GetMapping
+    public ResponseEntity<ApiResponse<Product>> getProductById(@RequestParam(value = "id", required = false) String id) {
         try {
             if (isInvalidParam(id)) {
                 return apiHandler.handleBadRequest(Constants.NO_PARAMS);
@@ -70,8 +69,8 @@ public class ProductController {
 
     // ======== DELETE ========
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse<Product>> deleteProduct(@PathVariable String id) {
+    @DeleteMapping("/delete")
+    public ResponseEntity<ApiResponse<Product>> deleteProduct(@RequestParam(value = "id", required = false) String id) {
         try {
             if (isInvalidParam(id)) {
                 return apiHandler.handleBadRequest(Constants.NO_PARAMS);

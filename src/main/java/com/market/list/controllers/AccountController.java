@@ -40,12 +40,11 @@ public class AccountController {
 
     // ======== READ ========
 
-    @GetMapping("/")
-    public ResponseEntity<ApiResponse<Account>> getAccount(
-            @RequestParam(value = "id", required = false) String id,
-            @RequestParam(value = "email", required = false) String email) {
+    @GetMapping
+    public ResponseEntity<ApiResponse<Account>> getAccount(@RequestParam(value = "id", required = false) String id,
+                                                           @RequestParam(value = "email", required = false) String email) {
         try {
-            if (isInvalidParam(id) || isInvalidParam(email)) {
+            if (isInvalidParam(id) && isInvalidParam(email)) {
                 return apiHandler.handleBadRequest(Constants.NO_PARAMS);
             }
             return apiHandler.handleSuccessGet(accountService.findAccount(id, email), Constants.ACCOUNT_FOUND);
@@ -68,8 +67,8 @@ public class AccountController {
 
     // ======== DELETE ========
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse<Account>> deleteAccount(@PathVariable String id) {
+    @DeleteMapping("/delete")
+    public ResponseEntity<ApiResponse<Account>> deleteAccount(@RequestParam(value = "id", required = false) String id) {
         try {
             if (isInvalidParam(id)) {
                 return apiHandler.handleBadRequest(Constants.NO_PARAMS);

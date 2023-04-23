@@ -70,14 +70,19 @@ public class GroupController {
 
     // ======== DELETE ========
 
-    @DeleteMapping("/{groupId}")
-    public ResponseEntity<ApiResponse<Group>> removeGroup(@PathVariable("groupId") String groupId,
+    @DeleteMapping("/delete")
+    public ResponseEntity<ApiResponse<Group>> removeGroup(@RequestParam(value = "groupId", required = false) String groupId,
                                                           @RequestBody String ownerId) {
         try {
+            if (isInvalidParam(groupId)) {
+                return apiHandler.handleBadRequest(Constants.NO_PARAMS);
+            }
+
             Group group = groupService.findById(groupId);
             if (isNotOwner(group, ownerId)) {
                 return apiHandler.handleForbidden();
             }
+
             groupService.delete(groupId);
             return apiHandler.handleSuccessDeletion(Constants.GROUP_DELETED);
         } catch (MarketException me) {
@@ -88,18 +93,18 @@ public class GroupController {
 
     // ======== RELATED TO ACCOUNT MANAGEMENT ========
 
-    @PutMapping("/transfer/{groupId}")
-    public ResponseEntity<ApiResponse<Group>> transferOwnership(@PathVariable("groupId") String groupId,
-                                                                @RequestParam("newOwnerId") String newOwnerId,
+    @PutMapping("/transfer")
+    public ResponseEntity<ApiResponse<Group>> transferOwnership(@RequestParam(value = "groupId", required = false) String groupId,
+                                                                @RequestParam(value = "newOwnerId", required = false) String newOwnerId,
                                                                 @RequestBody String ownerId) {
         try {
+            if (isInvalidParam(groupId) || isInvalidParam(newOwnerId)) {
+                return apiHandler.handleBadRequest(Constants.NO_PARAMS);
+            }
+
             Group group = groupService.findById(groupId);
             if (isNotOwner(group, ownerId)) {
                 return apiHandler.handleForbidden();
-            }
-
-            if (isInvalidParam(newOwnerId)) {
-                return apiHandler.handleBadRequest(Constants.NO_PARAMS);
             }
 
             groupService.transferOwnership(group, newOwnerId);
@@ -109,18 +114,18 @@ public class GroupController {
         }
     }
 
-    @PutMapping("/addAccount/{groupId}")
-    public ResponseEntity<ApiResponse<Group>> addAccountToGroup(@PathVariable("groupId") String groupId,
+    @PutMapping("/addAccount")
+    public ResponseEntity<ApiResponse<Group>> addAccountToGroup(@RequestParam(value = "groupId", required = false) String groupId,
                                                                 @RequestParam(value = "accountId", required = false) String accountId,
                                                                 @RequestBody String ownerId) {
         try {
+            if (isInvalidParam(groupId) || isInvalidParam(accountId)) {
+                return apiHandler.handleBadRequest(Constants.NO_PARAMS);
+            }
+
             Group group = groupService.findById(groupId);
             if (isNotOwner(group, ownerId)) {
                 return apiHandler.handleForbidden();
-            }
-
-            if (isInvalidParam(accountId)) {
-                return apiHandler.handleBadRequest(Constants.NO_PARAMS);
             }
 
             groupService.addAccountToGroup(groupId, accountId);
@@ -130,18 +135,18 @@ public class GroupController {
         }
     }
 
-    @PutMapping("/removeAccount/{groupId}")
-    public ResponseEntity<ApiResponse<Group>> removeAccountFromGroup(@PathVariable("groupId") String groupId,
+    @PutMapping("/removeAccount")
+    public ResponseEntity<ApiResponse<Group>> removeAccountFromGroup(@RequestParam(value = "groupId", required = false) String groupId,
                                                                      @RequestParam(value = "accountId", required = false) String accountId,
                                                                      @RequestBody String ownerId) {
         try {
+            if (isInvalidParam(groupId) || isInvalidParam(accountId)) {
+                return apiHandler.handleBadRequest(Constants.NO_PARAMS);
+            }
+
             Group group = groupService.findById(groupId);
             if (isNotOwner(group, ownerId)) {
                 return apiHandler.handleForbidden();
-            }
-
-            if (isInvalidParam(accountId)) {
-                return apiHandler.handleBadRequest(Constants.NO_PARAMS);
             }
 
             groupService.removeAccountFromGroup(groupId, accountId);
@@ -153,18 +158,18 @@ public class GroupController {
 
     // ======== RELATED TO LISTING MANAGEMENT ========
 
-    @PutMapping("/addListing/{groupId}")
-    public ResponseEntity<ApiResponse<Group>> addListingToGroup(@PathVariable("groupId") String groupId,
+    @PutMapping("/addListing")
+    public ResponseEntity<ApiResponse<Group>> addListingToGroup(@RequestParam(value = "groupId", required = false) String groupId,
                                                                 @RequestParam(value = "listingId", required = false) String listingId,
                                                                 @RequestBody String ownerId) {
         try {
+            if (isInvalidParam(groupId) || isInvalidParam(listingId)) {
+                return apiHandler.handleBadRequest(Constants.NO_PARAMS);
+            }
+
             Group group = groupService.findById(groupId);
             if (isNotOwner(group, ownerId)) {
                 return apiHandler.handleForbidden();
-            }
-
-            if (isInvalidParam(listingId)) {
-                return apiHandler.handleBadRequest(Constants.NO_PARAMS);
             }
 
             groupService.addListingToGroup(groupId, listingId);
@@ -174,18 +179,18 @@ public class GroupController {
         }
     }
 
-    @PutMapping("/removeListing/{groupId}")
-    public ResponseEntity<ApiResponse<Group>> removeListingFromGroup(@PathVariable("groupId") String groupId,
+    @PutMapping("/removeListing")
+    public ResponseEntity<ApiResponse<Group>> removeListingFromGroup(@RequestParam(value = "groupId", required = false) String groupId,
                                                                      @RequestParam(value = "listingId", required = false) String listingId,
                                                                      @RequestBody String ownerId) {
         try {
+            if (isInvalidParam(groupId) || isInvalidParam(listingId)) {
+                return apiHandler.handleBadRequest(Constants.NO_PARAMS);
+            }
+
             Group group = groupService.findById(groupId);
             if (isNotOwner(group, ownerId)) {
                 return apiHandler.handleForbidden();
-            }
-
-            if (isInvalidParam(listingId)) {
-                return apiHandler.handleBadRequest(Constants.NO_PARAMS);
             }
 
             groupService.removeListingFromGroup(groupId, listingId);

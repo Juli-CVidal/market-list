@@ -66,8 +66,8 @@ public class ListingController {
 
     // ======== DELETE ========
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse<Listing>> deleteAccount(@PathVariable String id) {
+    @DeleteMapping("/delete")
+    public ResponseEntity<ApiResponse<Listing>> deleteAccount(@RequestParam(value = "id", required = false) String id) {
         try {
             if (isInvalidParam(id)) {
                 return apiHandler.handleBadRequest(Constants.NO_PARAMS);
@@ -83,9 +83,9 @@ public class ListingController {
 
     // ======== RELATED TO ADD OR DELETE A PRODUCT ========
 
-
-    @PutMapping("/{listingId}/add/{productId}")
-    public ResponseEntity<ApiResponse<Listing>> addProductToListing(@PathVariable("listingId") String listingId, @PathVariable("productId") String productId) {
+    @PutMapping("/addProduct")
+    public ResponseEntity<ApiResponse<Listing>> addProductToListing(@RequestParam(value = "listingId", required = false) String listingId,
+                                                                    @RequestParam(value = "productId", required = false) String productId) {
         try {
             if (isInvalidParam(listingId) || isInvalidParam(productId)) {
                 return apiHandler.handleBadRequest(Constants.NO_PARAMS);
@@ -99,8 +99,9 @@ public class ListingController {
     }
 
 
-    @PutMapping("/{listingId}/remove/{productId}")
-    public ResponseEntity<ApiResponse<Listing>> removeProductFromListing(@PathVariable("listingId") String listingId, @PathVariable("productId") String productId) {
+    @PutMapping("/removeProduct")
+    public ResponseEntity<ApiResponse<Listing>> removeProductFromListing(@RequestParam(value = "listingId", required = false) String listingId,
+                                                                         @RequestParam(value = "productId", required = false) String productId) {
         try {
             if (isInvalidParam(listingId) || isInvalidParam(productId)) {
                 return apiHandler.handleBadRequest(Constants.NO_PARAMS);
