@@ -1,6 +1,7 @@
 package com.market.list.utils;
 
 public class Constants {
+
     // ======== ACTIONS ========
     private static final String CREATED = "se ha creado";
 
@@ -113,6 +114,8 @@ public class Constants {
     public static final String NO_PARAMS = "No se han introducido parámetros de búsqueda, reintente";
 
     public static final String PASSWORD_REQUIREMENTS = "La contraseña debe tener al menos ocho caracteres, una mayúscula y un número";
+
+    public static final String INVALID_PASSWORD = "Contraseña incorrecta, reintente";
 
     public static final String FORBIDDEN = "No tienes los permisos necesarios";
 }

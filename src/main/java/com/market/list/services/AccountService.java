@@ -2,6 +2,7 @@ package com.market.list.services;
 
 
 import com.market.list.entities.Account;
+import com.market.list.entities.AccountResponse;
 import com.market.list.entities.Group;
 import com.market.list.exception.MarketException;
 import com.market.list.handler.EntityHandler;
@@ -9,6 +10,7 @@ import com.market.list.handler.ValidatorHandlerImpl;
 import com.market.list.repositories.AccountRepository;
 import com.market.list.utils.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,10 +24,12 @@ public class AccountService {
 
     private final EntityHandler<Account> validationHandler;
 
+    private final BCryptPasswordEncoder passwordEncoder;
     @Autowired
     public AccountService(AccountRepository accountRepository, ValidatorHandlerImpl<Account> validationHandler) {
         this.accountRepository = accountRepository;
         this.validationHandler = validationHandler;
+        this.passwordEncoder = new BCryptPasswordEncoder();
     }
 
 
@@ -37,7 +41,7 @@ public class AccountService {
         if (isInvalidPassword(account.getPassword())) {
             throw new MarketException(Constants.PASSWORD_REQUIREMENTS);
         }
-        String password = new BCryptPasswordEncoder().encode(account.getPassword());
+        String password = passwordEncoder.encode(account.getPassword());
         System.out.println(password);
         account.setPassword(password);
         return accountRepository.save(account);
@@ -55,6 +59,7 @@ public class AccountService {
         if (account.isEmpty() && null != email) {
             account = accountRepository.findByEmail(email);
         }
+        account.ifPresent(value -> System.out.println(value.getGroups()));
         return account.orElseThrow(() -> new MarketException(Constants.NOT_FOUND));
     }
 
@@ -65,6 +70,21 @@ public class AccountService {
     public Account update(Account account) throws MarketException {
         validationHandler.handle(account);
         return accountRepository.save(account);
+    }
+
+
+    @Modifying
+    @Transactional
+    public Account updateAccount(AccountResponse changes) throws MarketException{
+        Account account = findAccount(changes.getId(), null);
+        if (wrongPassword(account.getPassword(),changes.getConfirmPassword())){
+            throw new MarketException(Constants.INVALID_PASSWORD);
+        }
+
+        System.out.println(account.getGroups());
+        account.setEmail(changes.getEmail());
+        account.setName(changes.getName());
+        return update(account);
     }
 
     // ======== DELETE ========
@@ -81,13 +101,13 @@ public class AccountService {
     @Transactional
     public void addGroupToAccount(Account account, Group group) throws MarketException {
         account.getGroups().add(group);
-        this.update(account);
+        update(account);
     }
 
     @Transactional
     public void removeGroupFromAccount(Account account, Group group) throws MarketException {
         if (account.getGroups().remove(group)) {
-            this.update(account);
+            update(account);
         }
     }
 
@@ -106,5 +126,9 @@ public class AccountService {
      */
     private boolean isInvalidPassword(String password) {
         return !password.matches("^(?=.*[A-Z])(?=.*\\d)[A-Za-z\\d]{8,}$");
+    }
+
+    public boolean wrongPassword(String password, String repeat) {
+        return !passwordEncoder.matches(repeat,password);
     }
 }

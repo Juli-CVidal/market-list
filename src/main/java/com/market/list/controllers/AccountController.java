@@ -1,6 +1,7 @@
 package com.market.list.controllers;
 
 import com.market.list.entities.Account;
+import com.market.list.entities.AccountResponse;
 import com.market.list.entities.ApiResponse;
 import com.market.list.exception.MarketException;
 import com.market.list.handler.ApiHandler;
@@ -8,6 +9,7 @@ import com.market.list.services.AccountService;
 import com.market.list.utils.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -56,12 +58,12 @@ public class AccountController {
     // ======== UPDATE ========
 
     @PutMapping
-    public ResponseEntity<ApiResponse<Account>> updateAccount(@RequestBody Account account) {
+    public ResponseEntity<ApiResponse<Account>> updateAccount(@RequestBody AccountResponse accountResponse) {
         try {
-            accountService.update(account);
+            Account account = accountService.updateAccount(accountResponse);
             return apiHandler.handleSuccessModification(account, Constants.ACCOUNT_MODIFIED);
         } catch (MarketException me) {
-            return apiHandler.handleExceptionMessage(account, Constants.ACCOUNT_HAS_ERRORS(me.getMessage()));
+            return apiHandler.handleExceptionMessage(null, Constants.ACCOUNT_HAS_ERRORS(me.getMessage()));
         }
     }
 

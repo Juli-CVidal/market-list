@@ -1,5 +1,6 @@
 package com.market.list.controllers;
 
+import com.market.list.entities.Account;
 import com.market.list.entities.ApiResponse;
 import com.market.list.entities.Group;
 import com.market.list.exception.MarketException;
@@ -37,8 +38,10 @@ public class GroupController {
     @PostMapping
     public ResponseEntity<ApiResponse<Group>> createGroup(@RequestBody Group group, @RequestParam("ownerId") String ownerId) {
         try {
-            group.setOwner(accountService.findAccount(ownerId, null));
+            Account account = accountService.findAccount(ownerId,null);
+            group.setOwner(account);
             groupService.create(group);
+            accountService.addGroupToAccount(account,group);
             return apiHandler.handleSuccessCreation(group, Constants.GROUP_CREATED);
         } catch (MarketException me) {
             return apiHandler.handleExceptionMessage(group, Constants.GROUP_HAS_ERRORS(me.getMessage()));
