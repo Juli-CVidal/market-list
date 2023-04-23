@@ -2,6 +2,7 @@ package com.market.list.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -18,8 +19,9 @@ import java.util.List;
 public class Account {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    @GeneratedValue(generator = "system-uuid")
+    @GenericGenerator(name = "system-uuid", strategy = "uuid")
+    private String id;
 
     @NotBlank(message = "Por favor ingrese su nombre")
     @Column(unique = true, nullable = false)
@@ -34,17 +36,19 @@ public class Account {
     @Column(unique = true, nullable = false)
     private String email;
 
-    //                ^(?=.* [A-Z]) checks if the string contains at least one uppercase letter
-    //                (?=.*\d) checks if the string contains at least one digit (0-9)
-    //                [A-Za-z\d] permits any uppercase/lowercase/digits
-    //                {8,} checks if the string contains at least eight characters
-    @Pattern(regexp = "^(?=.*[A-Z])(?=.*\\d)[A-Za-z\\d]{8,}$", message = "La contraseña debe tener un mínimo de ocho caracteres, una letra mayúscula y un número")
+
     @NotBlank(message = "Por favor ingrese una contraseña")
-    @JsonIgnore
     private String password;
 
 
     @JsonIgnore
     @ManyToMany(mappedBy = "accounts")
     private List<Group> groups;
+
+    @JsonIgnore
+    public String getPassword() {
+        return password;
+    }
+
+
 }

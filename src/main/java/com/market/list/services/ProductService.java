@@ -40,7 +40,7 @@ public class ProductService {
 
 
     @Transactional(readOnly = true)
-    public Product findById(Integer id) throws MarketException {
+    public Product findById(String id) throws MarketException {
         return productRepository.findById(id).orElseThrow(() -> new MarketException(Constants.NOT_FOUND));
     }
 
@@ -58,7 +58,7 @@ public class ProductService {
     // ======== DELETE ========
 
     @Transactional
-    public void delete(Integer id) throws MarketException {
+    public void delete(String id) throws MarketException {
         if (null != findById(id)) {
             productRepository.deleteById(id);
         }

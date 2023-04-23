@@ -35,7 +35,7 @@ public class ListingService {
 
 
     @Transactional(readOnly = true)
-    public Listing findById(Integer id) throws MarketException {
+    public Listing findById(String id) throws MarketException {
         return listingRepository.findById(id).orElseThrow(() -> new MarketException(Constants.NOT_FOUND));
     }
 
@@ -52,7 +52,7 @@ public class ListingService {
     // ======== DELETE ========
 
     @Transactional
-    public void delete(Integer id) throws MarketException {
+    public void delete(String id) throws MarketException {
         if (null != findById(id)) {
             listingRepository.deleteById(id);
         }
@@ -62,7 +62,7 @@ public class ListingService {
     // ======== RELATED TO PRODUCT MANAGEMENT ========
 
     @Transactional
-    public void addProductToListing(Integer listingId, Integer productId) throws MarketException {
+    public void addProductToListing(String listingId, String productId) throws MarketException {
         Listing listing = findById(listingId);
         Product product = productService.findById(productId);
         listing.getProducts().add(product);
@@ -71,7 +71,7 @@ public class ListingService {
 
 
     @Transactional
-    public void removeProductFromListing(Integer listingId, Integer productId) throws MarketException {
+    public void removeProductFromListing(String listingId, String productId) throws MarketException {
         Listing listing = findById(listingId);
         Product product = productService.findById(productId);
 

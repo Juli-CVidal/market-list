@@ -42,7 +42,7 @@ public class ProductController {
     // ======== READ ========
 
     @GetMapping("/")
-    public ResponseEntity<ApiResponse<Product>> getProductById(@RequestParam("id") Integer id) {
+    public ResponseEntity<ApiResponse<Product>> getProductById(@RequestParam("id") String id) {
         try {
             return apiHandler.handleSuccessGet(productService.findById(id), Constants.PRODUCT_FOUND);
         } catch (MarketException me) {
@@ -67,7 +67,7 @@ public class ProductController {
     // ======== DELETE ========
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse<Product>> deleteProduct(@PathVariable Integer id) {
+    public ResponseEntity<ApiResponse<Product>> deleteProduct(@PathVariable String id) {
         try {
             productService.delete(id);
             return apiHandler.handleSuccessDeletion(Constants.PRODUCT_DELETED);

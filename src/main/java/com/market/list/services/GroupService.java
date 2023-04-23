@@ -37,7 +37,7 @@ public class GroupService {
     // ======== READ ========
 
     @Transactional(readOnly = true)
-    public Group findById(Integer id) throws MarketException {
+    public Group findById(String id) throws MarketException {
         return groupRepository.findById(id).orElseThrow(() -> new MarketException(Constants.NOT_FOUND));
     }
 
@@ -52,7 +52,7 @@ public class GroupService {
     // ======== DELETE ========
 
     @Transactional
-    public void delete(Integer id) throws MarketException {
+    public void delete(String id) throws MarketException {
         Group group = this.findById(id);
         if (null != group && group.getAccounts().isEmpty()) {
             groupRepository.delete(group);
@@ -62,7 +62,7 @@ public class GroupService {
     // ======== RELATED TO LISTING AND ACCOUNT MANAGEMENT ========
 
     @Transactional(readOnly = true)
-    public Listing findListingInGroup(Integer groupId, Integer listingId) throws MarketException {
+    public Listing findListingInGroup(String groupId, String listingId) throws MarketException {
         Group group = this.findById(groupId);
         Listing listing = listingService.findById(listingId);
         if (!listing.getGroup().equals(group)) {
@@ -72,7 +72,7 @@ public class GroupService {
     }
 
     @Transactional
-    public Group addListingToGroup(Integer groupdId, Integer listingId) throws MarketException {
+    public Group addListingToGroup(String groupdId, String listingId) throws MarketException {
         Group group = this.findById(groupdId);
         Listing listing = listingService.findById(listingId);
         group.getListings().add(listing);
@@ -82,7 +82,7 @@ public class GroupService {
     }
 
     @Transactional
-    public void removeListingFromGroup(Integer groupId, Integer listId) throws MarketException {
+    public void removeListingFromGroup(String groupId, String listId) throws MarketException {
         Group group = this.findById(groupId);
         Listing listing = listingService.findById(listId);
 
@@ -93,7 +93,7 @@ public class GroupService {
     }
 
     @Transactional(readOnly = true)
-    public Account findAccountInGroup(Integer groupId, Integer accountId) throws MarketException {
+    public Account findAccountInGroup(String groupId, String accountId) throws MarketException {
         Group group = this.findById(groupId);
         Account account = accountService.findAccount(accountId, null);
         if (!account.getGroups().contains(group)) {
@@ -103,7 +103,7 @@ public class GroupService {
     }
 
     @Transactional
-    public void transferOwnership(Group group, Integer newOwnerId) throws MarketException {
+    public void transferOwnership(Group group, String newOwnerId) throws MarketException {
         Account account = accountService.findAccount(newOwnerId, null);
         group.setOwner(account);
         group.getAccounts().remove(account);
@@ -112,7 +112,7 @@ public class GroupService {
 
 
     @Transactional
-    public void addAccountToGroup(Integer groupId, Integer accountId) throws MarketException {
+    public void addAccountToGroup(String groupId, String accountId) throws MarketException {
         Group group = this.findById(groupId);
         Account account = accountService.findAccount(accountId, null);
         accountService.addGroupToAccount(account, group);
@@ -122,7 +122,7 @@ public class GroupService {
     }
 
     @Transactional
-    public void removeAccountFromGroup(Integer groupId, Integer accountId) throws MarketException {
+    public void removeAccountFromGroup(String groupId, String accountId) throws MarketException {
         Group group = this.findById(groupId);
         Account account = accountService.findAccount(accountId, null);
 

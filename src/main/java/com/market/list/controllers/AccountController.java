@@ -42,7 +42,7 @@ public class AccountController {
 
     @GetMapping("/")
     public ResponseEntity<ApiResponse<Account>> getAccount(
-            @RequestParam(value = "id", required = false) Integer id,
+            @RequestParam(value = "id", required = false) String id,
             @RequestParam(value = "email", required = false) String email) {
         try {
             if (null == id && null == email) {
@@ -69,7 +69,7 @@ public class AccountController {
     // ======== DELETE ========
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse<Account>> deleteAccount(@PathVariable Integer id) {
+    public ResponseEntity<ApiResponse<Account>> deleteAccount(@PathVariable String id) {
         try {
             accountService.delete(id);
             return apiHandler.handleSuccessDeletion(Constants.ACCOUNT_DELETED);

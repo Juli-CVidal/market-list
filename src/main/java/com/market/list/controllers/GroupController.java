@@ -35,7 +35,7 @@ public class GroupController {
     // ======== CREATE ========
 
     @PostMapping
-    public ResponseEntity<ApiResponse<Group>> createGroup(@RequestBody Group group, @RequestParam("ownerId") Integer ownerId) {
+    public ResponseEntity<ApiResponse<Group>> createGroup(@RequestBody Group group, @RequestParam("ownerId") String ownerId) {
         try {
             group.setOwner(accountService.findAccount(ownerId, null));
             groupService.create(group);
@@ -48,7 +48,7 @@ public class GroupController {
     // ======== READ ========
 
     @GetMapping
-    public ResponseEntity<ApiResponse<Group>> getGroupById(@RequestParam(value = "id", required = false) Integer id) {
+    public ResponseEntity<ApiResponse<Group>> getGroupById(@RequestParam(value = "id", required = false) String id) {
         try {
             if (null == id) {
                 return apiHandler.handleBadRequest(Constants.NO_PARAMS);
@@ -71,8 +71,8 @@ public class GroupController {
     // ======== DELETE ========
 
     @DeleteMapping("/{groupId}")
-    public ResponseEntity<ApiResponse<Group>> removeGroup(@PathVariable("groupId") Integer groupId,
-                                                          @RequestBody Integer ownerId) {
+    public ResponseEntity<ApiResponse<Group>> removeGroup(@PathVariable("groupId") String groupId,
+                                                          @RequestBody String ownerId) {
         try {
             Group group = groupService.findById(groupId);
             if (isNotOwner(group, ownerId)) {
@@ -89,9 +89,9 @@ public class GroupController {
     // ======== RELATED TO ACCOUNT MANAGEMENT ========
 
     @PutMapping("/transfer/{groupId}")
-    public ResponseEntity<ApiResponse<Group>> transferOwnership(@PathVariable("groupId") Integer groupId,
-                                                                @RequestParam("newOwnerId") Integer newOwnerId,
-                                                                @RequestBody Integer ownerId) {
+    public ResponseEntity<ApiResponse<Group>> transferOwnership(@PathVariable("groupId") String groupId,
+                                                                @RequestParam("newOwnerId") String newOwnerId,
+                                                                @RequestBody String ownerId) {
         try {
             Group group = groupService.findById(groupId);
             if (isNotOwner(group, ownerId)) {
@@ -106,9 +106,9 @@ public class GroupController {
     }
 
     @PutMapping("/addAccount/{groupId}")
-    public ResponseEntity<ApiResponse<Group>> addAccountToGroup(@PathVariable("groupId") Integer groupId,
-                                                                @RequestParam(value = "accountId", required = false) Integer accountId,
-                                                                @RequestBody Integer ownerId) {
+    public ResponseEntity<ApiResponse<Group>> addAccountToGroup(@PathVariable("groupId") String groupId,
+                                                                @RequestParam(value = "accountId", required = false) String accountId,
+                                                                @RequestBody String ownerId) {
         try {
             Group group = groupService.findById(groupId);
             if (isNotOwner(group, ownerId)) {
@@ -127,9 +127,9 @@ public class GroupController {
     }
 
     @PutMapping("/removeAccount/{groupId}")
-    public ResponseEntity<ApiResponse<Group>> removeAccountFromGroup(@PathVariable("groupId") Integer groupId,
-                                                                     @RequestParam(value = "accountId", required = false) Integer accountId,
-                                                                     @RequestBody Integer ownerId) {
+    public ResponseEntity<ApiResponse<Group>> removeAccountFromGroup(@PathVariable("groupId") String groupId,
+                                                                     @RequestParam(value = "accountId", required = false) String accountId,
+                                                                     @RequestBody String ownerId) {
         try {
             Group group = groupService.findById(groupId);
             if (isNotOwner(group, ownerId)) {
@@ -150,9 +150,9 @@ public class GroupController {
     // ======== RELATED TO LISTING MANAGEMENT ========
 
     @PutMapping("/addListing/{groupId}")
-    public ResponseEntity<ApiResponse<Group>> addListingToGroup(@PathVariable("groupId") Integer groupId,
-                                                                @RequestParam(value = "listingId", required = false) Integer listingId,
-                                                                @RequestBody Integer ownerId) {
+    public ResponseEntity<ApiResponse<Group>> addListingToGroup(@PathVariable("groupId") String groupId,
+                                                                @RequestParam(value = "listingId", required = false) String listingId,
+                                                                @RequestBody String ownerId) {
         try {
             Group group = groupService.findById(groupId);
             if (isNotOwner(group, ownerId)) {
@@ -171,9 +171,9 @@ public class GroupController {
     }
 
     @PutMapping("/removeListing/{groupId}")
-    public ResponseEntity<ApiResponse<Group>> removeListingFromGroup(@PathVariable("groupId") Integer groupId,
-                                                                     @RequestParam(value = "listingId", required = false) Integer listingId,
-                                                                     @RequestBody Integer ownerId) {
+    public ResponseEntity<ApiResponse<Group>> removeListingFromGroup(@PathVariable("groupId") String groupId,
+                                                                     @RequestParam(value = "listingId", required = false) String listingId,
+                                                                     @RequestBody String ownerId) {
         try {
             Group group = groupService.findById(groupId);
             if (isNotOwner(group, ownerId)) {
@@ -192,7 +192,7 @@ public class GroupController {
     }
 
 
-    private boolean isNotOwner(Group group, Integer accountId) {
+    private boolean isNotOwner(Group group, String accountId) {
         return !Objects.equals(group.getOwner().getId(), accountId);
     }
 }

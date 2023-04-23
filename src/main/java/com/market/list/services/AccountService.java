@@ -34,7 +34,12 @@ public class AccountService {
     @Transactional
     public Account create(Account account) throws MarketException {
         validationHandler.handle(account);
-        account.setPassword(new BCryptPasswordEncoder().encode(account.getPassword()));
+        if (isInvalidPassword(account.getPassword())){
+            throw new MarketException(Constants.PASSWORD_REQUIREMENTS);
+        }
+        String password = new BCryptPasswordEncoder().encode(account.getPassword());
+        System.out.println(password);
+        account.setPassword(password);
         return accountRepository.save(account);
     }
 
@@ -42,9 +47,9 @@ public class AccountService {
     // ======== READ ========
 
     @Transactional(readOnly = true)
-    public Account findAccount(Integer id, String email) throws MarketException {
+    public Account findAccount(String id, String email) throws MarketException {
         Optional<Account> account = Optional.empty();
-        if (null != id) {
+        if (null != id && !id.isBlank()) {
             account = accountRepository.findById(id);
         }
         if (account.isEmpty() && null != email) {
@@ -65,7 +70,7 @@ public class AccountService {
     // ======== DELETE ========
 
     @Transactional
-    public void delete(Integer id) throws MarketException {
+    public void delete(String id) throws MarketException {
         if (null != findAccount(id, null)) {
             accountRepository.deleteById(id);
         }
@@ -84,5 +89,21 @@ public class AccountService {
         if (account.getGroups().remove(group)) {
             this.update(account);
         }
+    }
+
+
+    // ======== PASSWORD REQUIREMENTS VALIDATION ========
+
+
+    /**
+     *   ^(?=.* [A-Z]) checks if the string contains at least one uppercase letter
+     *   (?=.*\d) checks if the string contains at least one digit (0-9)
+     *   [A-Za-z\d] permits any uppercase/lowercase/digits
+     *   {8,} checks if the string contains at least eight characters
+     * @param password the password attribute, without encryption
+     * @return true if the password is valid (at least eight chars, one number and one uppercase letter), otherwise false
+     */
+    private boolean isInvalidPassword(String password){
+        return !password.matches("^(?=.*[A-Z])(?=.*\\d)[A-Za-z\\d]{8,}$");
     }
 }

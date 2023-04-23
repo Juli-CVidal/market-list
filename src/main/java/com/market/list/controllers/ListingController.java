@@ -39,7 +39,7 @@ public class ListingController {
     // ======== READ ========
 
     @GetMapping
-    public ResponseEntity<ApiResponse<Listing>> getListingById(@RequestParam(value = "id", required = false) Integer id) {
+    public ResponseEntity<ApiResponse<Listing>> getListingById(@RequestParam(value = "id", required = false) String id) {
         try {
             if (null == id){
                 return apiHandler.handleBadRequest(Constants.NO_PARAMS);
@@ -68,7 +68,7 @@ public class ListingController {
     // ======== DELETE ========
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse<Listing>> deleteAccount(@PathVariable Integer id) {
+    public ResponseEntity<ApiResponse<Listing>> deleteAccount(@PathVariable String id) {
         try {
             listingService.delete(id);
             return apiHandler.handleSuccessDeletion(Constants.LISTING_DELETED);
@@ -82,7 +82,7 @@ public class ListingController {
 
 
     @PutMapping("/{listingId}/add/{productId}")
-    public ResponseEntity<ApiResponse<Listing>> addProductToListing(@PathVariable("listingId") Integer listingId, @PathVariable("productId") Integer productId) {
+    public ResponseEntity<ApiResponse<Listing>> addProductToListing(@PathVariable("listingId") String listingId, @PathVariable("productId") String productId) {
         try {
             listingService.addProductToListing(listingId, productId);
             return apiHandler.handleSuccessAddition(Constants.PRODUCT_ADDED_TO_LIST);
@@ -93,7 +93,7 @@ public class ListingController {
 
 
     @PutMapping("/{listingId}/remove/{productId}")
-    public ResponseEntity<ApiResponse<Listing>> removeProductFromListing(@PathVariable("listingId") Integer listingId,@PathVariable("productId") Integer productId){
+    public ResponseEntity<ApiResponse<Listing>> removeProductFromListing(@PathVariable("listingId") String listingId,@PathVariable("productId") String productId){
         try{
             listingService.removeProductFromListing(listingId,productId);
             return apiHandler.handleSuccessRemoving(Constants.PRODUCT_REMOVED_FROM_LIST);

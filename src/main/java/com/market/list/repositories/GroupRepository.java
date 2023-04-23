@@ -13,7 +13,7 @@ import java.util.Optional;
 
 
 @Repository
-public interface GroupRepository extends JpaRepository<Group, Integer> {
+public interface GroupRepository extends JpaRepository<Group, String> {
 
     @Transactional(readOnly = true)
     @Query(value = "SELECT g FROM Group g WHERE g.id = :id")
