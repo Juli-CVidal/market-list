@@ -43,11 +43,11 @@ public class ApiHandler<T> {
     }
 
     public ResponseEntity<ApiResponse<T>> handleSuccessRemoving(String message) {
-        return handleResponse(HttpStatus.OK,null,message);
+        return handleResponse(HttpStatus.OK, null, message);
     }
 
     public ResponseEntity<ApiResponse<T>> handleForbidden() {
-        return handleResponse(HttpStatus.FORBIDDEN,null, Constants.FORBIDDEN);
+        return handleResponse(HttpStatus.FORBIDDEN, null, Constants.FORBIDDEN);
     }
 
     private ResponseEntity<ApiResponse<T>> handleResponse(HttpStatus status, T entity, String message) {

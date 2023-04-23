@@ -19,7 +19,6 @@ public class Constants {
     private static final String REMOVED_FROM_LIST = "se ha eliminado de la lista";
 
 
-
     // ======== ACCOUNT ========
 
     private static final String ACCOUNT_ENTITY = "La cuenta";

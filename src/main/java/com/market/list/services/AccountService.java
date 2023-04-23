@@ -34,7 +34,7 @@ public class AccountService {
     @Transactional
     public Account create(Account account) throws MarketException {
         validationHandler.handle(account);
-        if (isInvalidPassword(account.getPassword())){
+        if (isInvalidPassword(account.getPassword())) {
             throw new MarketException(Constants.PASSWORD_REQUIREMENTS);
         }
         String password = new BCryptPasswordEncoder().encode(account.getPassword());
@@ -96,14 +96,15 @@ public class AccountService {
 
 
     /**
-     *   ^(?=.* [A-Z]) checks if the string contains at least one uppercase letter
-     *   (?=.*\d) checks if the string contains at least one digit (0-9)
-     *   [A-Za-z\d] permits any uppercase/lowercase/digits
-     *   {8,} checks if the string contains at least eight characters
+     * ^(?=.* [A-Z]) checks if the string contains at least one uppercase letter
+     * (?=.*\d) checks if the string contains at least one digit (0-9)
+     * [A-Za-z\d] permits any uppercase/lowercase/digits
+     * {8,} checks if the string contains at least eight characters
+     *
      * @param password the password attribute, without encryption
      * @return true if the password is valid (at least eight chars, one number and one uppercase letter), otherwise false
      */
-    private boolean isInvalidPassword(String password){
+    private boolean isInvalidPassword(String password) {
         return !password.matches("^(?=.*[A-Z])(?=.*\\d)[A-Za-z\\d]{8,}$");
     }
 }
