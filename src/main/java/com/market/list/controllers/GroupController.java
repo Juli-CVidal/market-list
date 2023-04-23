@@ -50,7 +50,7 @@ public class GroupController {
     @GetMapping
     public ResponseEntity<ApiResponse<Group>> getGroupById(@RequestParam(value = "id", required = false) String id) {
         try {
-            if (null == id) {
+            if (isInvalidParam(id)) {
                 return apiHandler.handleBadRequest(Constants.NO_PARAMS);
             }
 
@@ -98,6 +98,10 @@ public class GroupController {
                 return apiHandler.handleForbidden();
             }
 
+            if (isInvalidParam(newOwnerId)) {
+                return apiHandler.handleBadRequest(Constants.NO_PARAMS);
+            }
+
             groupService.transferOwnership(group, newOwnerId);
             return apiHandler.handleSuccessModification(group, Constants.NEW_OWNER);
         } catch (MarketException me) {
@@ -115,7 +119,7 @@ public class GroupController {
                 return apiHandler.handleForbidden();
             }
 
-            if (null == accountId) {
+            if (isInvalidParam(accountId)) {
                 return apiHandler.handleBadRequest(Constants.NO_PARAMS);
             }
 
@@ -136,7 +140,7 @@ public class GroupController {
                 return apiHandler.handleForbidden();
             }
 
-            if (null == accountId) {
+            if (isInvalidParam(accountId)) {
                 return apiHandler.handleBadRequest(Constants.NO_PARAMS);
             }
 
@@ -159,7 +163,7 @@ public class GroupController {
                 return apiHandler.handleForbidden();
             }
 
-            if (null == listingId) {
+            if (isInvalidParam(listingId)) {
                 return apiHandler.handleBadRequest(Constants.NO_PARAMS);
             }
 
@@ -180,7 +184,7 @@ public class GroupController {
                 return apiHandler.handleForbidden();
             }
 
-            if (null == listingId) {
+            if (isInvalidParam(listingId)) {
                 return apiHandler.handleBadRequest(Constants.NO_PARAMS);
             }
 
@@ -194,5 +198,12 @@ public class GroupController {
 
     private boolean isNotOwner(Group group, String accountId) {
         return !Objects.equals(group.getOwner().getId(), accountId);
+    }
+
+
+    // ======== PARAMS VALIDATORS ========
+
+    private boolean isInvalidParam(String param) {
+        return null == param || param.isBlank();
     }
 }

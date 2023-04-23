@@ -45,7 +45,7 @@ public class AccountController {
             @RequestParam(value = "id", required = false) String id,
             @RequestParam(value = "email", required = false) String email) {
         try {
-            if (null == id && null == email) {
+            if (isInvalidParam(id) || isInvalidParam(email)) {
                 return apiHandler.handleBadRequest(Constants.NO_PARAMS);
             }
             return apiHandler.handleSuccessGet(accountService.findAccount(id, email), Constants.ACCOUNT_FOUND);
@@ -71,10 +71,21 @@ public class AccountController {
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse<Account>> deleteAccount(@PathVariable String id) {
         try {
+            if (isInvalidParam(id)) {
+                return apiHandler.handleBadRequest(Constants.NO_PARAMS);
+            }
+
             accountService.delete(id);
             return apiHandler.handleSuccessDeletion(Constants.ACCOUNT_DELETED);
         } catch (MarketException me) {
             return apiHandler.handleExceptionMessage(null, me.getMessage());
         }
+    }
+
+
+    // ======== PARAMS VALIDATORS ========
+
+    private boolean isInvalidParam(String param) {
+        return null == param || param.isBlank();
     }
 }

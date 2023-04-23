@@ -2,7 +2,6 @@ package com.market.list.controllers;
 
 import com.market.list.entities.ApiResponse;
 import com.market.list.entities.Listing;
-import com.market.list.entities.Product;
 import com.market.list.exception.MarketException;
 import com.market.list.handler.ApiHandler;
 import com.market.list.services.ListingService;
@@ -41,7 +40,7 @@ public class ListingController {
     @GetMapping
     public ResponseEntity<ApiResponse<Listing>> getListingById(@RequestParam(value = "id", required = false) String id) {
         try {
-            if (null == id){
+            if (isInvalidParam(id)) {
                 return apiHandler.handleBadRequest(Constants.NO_PARAMS);
             }
 
@@ -70,6 +69,10 @@ public class ListingController {
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse<Listing>> deleteAccount(@PathVariable String id) {
         try {
+            if (isInvalidParam(id)) {
+                return apiHandler.handleBadRequest(Constants.NO_PARAMS);
+            }
+
             listingService.delete(id);
             return apiHandler.handleSuccessDeletion(Constants.LISTING_DELETED);
         } catch (MarketException me) {
@@ -84,6 +87,10 @@ public class ListingController {
     @PutMapping("/{listingId}/add/{productId}")
     public ResponseEntity<ApiResponse<Listing>> addProductToListing(@PathVariable("listingId") String listingId, @PathVariable("productId") String productId) {
         try {
+            if (isInvalidParam(listingId) || isInvalidParam(productId)) {
+                return apiHandler.handleBadRequest(Constants.NO_PARAMS);
+            }
+
             listingService.addProductToListing(listingId, productId);
             return apiHandler.handleSuccessAddition(Constants.PRODUCT_ADDED_TO_LIST);
         } catch (MarketException me) {
@@ -93,13 +100,23 @@ public class ListingController {
 
 
     @PutMapping("/{listingId}/remove/{productId}")
-    public ResponseEntity<ApiResponse<Listing>> removeProductFromListing(@PathVariable("listingId") String listingId,@PathVariable("productId") String productId){
-        try{
-            listingService.removeProductFromListing(listingId,productId);
+    public ResponseEntity<ApiResponse<Listing>> removeProductFromListing(@PathVariable("listingId") String listingId, @PathVariable("productId") String productId) {
+        try {
+            if (isInvalidParam(listingId) || isInvalidParam(productId)) {
+                return apiHandler.handleBadRequest(Constants.NO_PARAMS);
+            }
+
+            listingService.removeProductFromListing(listingId, productId);
             return apiHandler.handleSuccessRemoving(Constants.PRODUCT_REMOVED_FROM_LIST);
-        } catch(MarketException me){
-            return apiHandler.handleExceptionMessage(null,Constants.LISTING_HAS_ERRORS(me.getMessage()));
+        } catch (MarketException me) {
+            return apiHandler.handleExceptionMessage(null, Constants.LISTING_HAS_ERRORS(me.getMessage()));
         }
     }
 
+
+    // ======== PARAMS VALIDATORS ========
+
+    private boolean isInvalidParam(String param) {
+        return null == param || param.isBlank();
+    }
 }

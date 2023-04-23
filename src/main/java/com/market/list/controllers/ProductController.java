@@ -44,6 +44,10 @@ public class ProductController {
     @GetMapping("/")
     public ResponseEntity<ApiResponse<Product>> getProductById(@RequestParam("id") String id) {
         try {
+            if (isInvalidParam(id)) {
+                return apiHandler.handleBadRequest(Constants.NO_PARAMS);
+            }
+
             return apiHandler.handleSuccessGet(productService.findById(id), Constants.PRODUCT_FOUND);
         } catch (MarketException me) {
             return apiHandler.handleNotFound(me.getMessage());
@@ -69,10 +73,21 @@ public class ProductController {
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse<Product>> deleteProduct(@PathVariable String id) {
         try {
+            if (isInvalidParam(id)) {
+                return apiHandler.handleBadRequest(Constants.NO_PARAMS);
+            }
+
             productService.delete(id);
             return apiHandler.handleSuccessDeletion(Constants.PRODUCT_DELETED);
         } catch (MarketException me) {
             return apiHandler.handleExceptionMessage(null, me.getMessage());
         }
+    }
+
+
+    // ======== PARAMS VALIDATORS ========
+
+    private boolean isInvalidParam(String param) {
+        return null == param || param.isBlank();
     }
 }
