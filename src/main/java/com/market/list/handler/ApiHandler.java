@@ -46,8 +46,8 @@ public class ApiHandler<T> {
         return handleResponse(HttpStatus.OK, null, message);
     }
 
-    public ResponseEntity<ApiResponse<T>> handleForbidden() {
-        return handleResponse(HttpStatus.FORBIDDEN, null, Constants.FORBIDDEN);
+    public ResponseEntity<ApiResponse<T>> handleUnauthorized() {
+        return handleResponse(HttpStatus.UNAUTHORIZED, null, Constants.UNAUTHORIZED);
     }
 
     private ResponseEntity<ApiResponse<T>> handleResponse(HttpStatus status, T entity, String message) {

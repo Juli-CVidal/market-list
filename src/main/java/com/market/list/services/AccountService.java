@@ -2,7 +2,7 @@ package com.market.list.services;
 
 
 import com.market.list.entities.Account;
-import com.market.list.entities.AccountResponse;
+import com.market.list.entities.AccountRequest;
 import com.market.list.entities.Group;
 import com.market.list.exception.MarketException;
 import com.market.list.handler.EntityHandler;
@@ -59,7 +59,7 @@ public class AccountService {
         if (account.isEmpty() && null != email) {
             account = accountRepository.findByEmail(email);
         }
-        account.ifPresent(value -> System.out.println(value.getGroups()));
+
         return account.orElseThrow(() -> new MarketException(Constants.NOT_FOUND));
     }
 
@@ -72,20 +72,19 @@ public class AccountService {
         return accountRepository.save(account);
     }
 
-
     @Modifying
     @Transactional
-    public Account updateAccount(AccountResponse changes) throws MarketException{
+    public Account updateAccount(AccountRequest changes) throws MarketException{
         Account account = findAccount(changes.getId(), null);
         if (wrongPassword(account.getPassword(),changes.getConfirmPassword())){
             throw new MarketException(Constants.INVALID_PASSWORD);
         }
 
-        System.out.println(account.getGroups());
         account.setEmail(changes.getEmail());
         account.setName(changes.getName());
         return update(account);
     }
+
 
     // ======== DELETE ========
 
@@ -95,6 +94,7 @@ public class AccountService {
             accountRepository.deleteById(id);
         }
     }
+
 
     // ======== RELATED TO GROUP MANAGEMENT ========
 
@@ -122,7 +122,7 @@ public class AccountService {
      * {8,} checks if the string contains at least eight characters
      *
      * @param password the password attribute, without encryption
-     * @return true if the password is valid (at least eight chars, one number and one uppercase letter), otherwise false
+     * @return true if the password is valid (at least eight chars, with one number and one uppercase letter), otherwise false
      */
     private boolean isInvalidPassword(String password) {
         return !password.matches("^(?=.*[A-Z])(?=.*\\d)[A-Za-z\\d]{8,}$");

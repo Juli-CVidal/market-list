@@ -83,7 +83,7 @@ public class GroupController {
 
             Group group = groupService.findById(groupId);
             if (isNotOwner(group, ownerId)) {
-                return apiHandler.handleForbidden();
+                return apiHandler.handleUnauthorized();
             }
 
             groupService.delete(groupId);
@@ -107,7 +107,7 @@ public class GroupController {
 
             Group group = groupService.findById(groupId);
             if (isNotOwner(group, ownerId)) {
-                return apiHandler.handleForbidden();
+                return apiHandler.handleUnauthorized();
             }
 
             groupService.transferOwnership(group, newOwnerId);
@@ -128,7 +128,7 @@ public class GroupController {
 
             Group group = groupService.findById(groupId);
             if (isNotOwner(group, ownerId)) {
-                return apiHandler.handleForbidden();
+                return apiHandler.handleUnauthorized();
             }
 
             groupService.addAccountToGroup(groupId, accountId);
@@ -149,7 +149,7 @@ public class GroupController {
 
             Group group = groupService.findById(groupId);
             if (isNotOwner(group, ownerId)) {
-                return apiHandler.handleForbidden();
+                return apiHandler.handleUnauthorized();
             }
 
             groupService.removeAccountFromGroup(groupId, accountId);
@@ -172,7 +172,7 @@ public class GroupController {
 
             Group group = groupService.findById(groupId);
             if (isNotOwner(group, ownerId)) {
-                return apiHandler.handleForbidden();
+                return apiHandler.handleUnauthorized();
             }
 
             groupService.addListingToGroup(groupId, listingId);
@@ -193,7 +193,7 @@ public class GroupController {
 
             Group group = groupService.findById(groupId);
             if (isNotOwner(group, ownerId)) {
-                return apiHandler.handleForbidden();
+                return apiHandler.handleUnauthorized();
             }
 
             groupService.removeListingFromGroup(groupId, listingId);

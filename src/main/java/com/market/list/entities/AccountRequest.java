@@ -6,7 +6,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class AccountResponse {
+public class AccountRequest {
 
     private final String id;
 

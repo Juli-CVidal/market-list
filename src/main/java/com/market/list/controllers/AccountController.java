@@ -1,15 +1,15 @@
 package com.market.list.controllers;
 
 import com.market.list.entities.Account;
-import com.market.list.entities.AccountResponse;
+import com.market.list.entities.AccountRequest;
 import com.market.list.entities.ApiResponse;
 import com.market.list.exception.MarketException;
 import com.market.list.handler.ApiHandler;
 import com.market.list.services.AccountService;
 import com.market.list.utils.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -36,6 +36,8 @@ public class AccountController {
             return apiHandler.handleSuccessCreation(account, Constants.ACCOUNT_CREATED);
         } catch (MarketException me) {
             return apiHandler.handleExceptionMessage(account, Constants.ACCOUNT_HAS_ERRORS(me.getMessage()));
+        } catch (DataIntegrityViolationException dive){
+            return apiHandler.handleExceptionMessage(account,Constants.EXISTING_EMAIL);
         }
     }
 
@@ -58,9 +60,9 @@ public class AccountController {
     // ======== UPDATE ========
 
     @PutMapping
-    public ResponseEntity<ApiResponse<Account>> updateAccount(@RequestBody AccountResponse accountResponse) {
+    public ResponseEntity<ApiResponse<Account>> updateAccount(@RequestBody AccountRequest accountRequest) {
         try {
-            Account account = accountService.updateAccount(accountResponse);
+            Account account = accountService.updateAccount(accountRequest);
             return apiHandler.handleSuccessModification(account, Constants.ACCOUNT_MODIFIED);
         } catch (MarketException me) {
             return apiHandler.handleExceptionMessage(null, Constants.ACCOUNT_HAS_ERRORS(me.getMessage()));

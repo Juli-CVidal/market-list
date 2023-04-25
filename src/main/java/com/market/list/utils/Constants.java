@@ -35,6 +35,7 @@ public class Constants {
     public static final String ACCOUNT_ADDED_TO_GROUP = successMessage(ACCOUNT_ENTITY, ADDED_TO_GROUP);
 
     public static final String ACCOUNT_REMOVED_FROM_GROUP = successMessage(ACCOUNT_ENTITY, REMOVED_FROM_GROUP);
+    public static final String EXISTING_EMAIL = "El correo electrónico ya está siendo utilizado por otra cuenta";
 
     public static String ACCOUNT_HAS_ERRORS(String errors) {
         return "Ha ocurrido un error con la cuenta: \n" + errors;
@@ -117,5 +118,5 @@ public class Constants {
 
     public static final String INVALID_PASSWORD = "Contraseña incorrecta, reintente";
 
-    public static final String FORBIDDEN = "No tienes los permisos necesarios";
+    public static final String UNAUTHORIZED = "No tienes los permisos necesarios";
 }

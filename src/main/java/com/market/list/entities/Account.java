@@ -1,11 +1,8 @@
 package com.market.list.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -15,6 +12,7 @@ import java.util.List;
 
 @Getter
 @Setter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "account")
@@ -27,7 +25,7 @@ public class Account {
     private String id;
 
     @NotBlank(message = "Por favor ingrese su nombre")
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private String name;
 
     //               [a-zA-Z0-9._%+-] at least one alphanumeric (or special) character before '@'
@@ -40,6 +38,7 @@ public class Account {
     private String email;
 
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @NotBlank(message = "Por favor ingrese una contraseña")
     private String password;
 
@@ -48,8 +47,5 @@ public class Account {
     @ManyToMany(mappedBy = "accounts")
     private List<Group> groups;
 
-    @JsonIgnore
-    public String getPassword() {
-        return password;
-    }
+
 }
