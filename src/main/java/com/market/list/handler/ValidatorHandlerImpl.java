@@ -1,6 +1,6 @@
-package com.market.list.handlers;
+package com.market.list.handler;
 
-import com.market.list.exceptions.MarketException;
+import com.market.list.exception.MarketException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
