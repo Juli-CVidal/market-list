@@ -1,4 +1,4 @@
-package com.market.list.handler;
+package com.market.list.handlers;
 
 import com.market.list.entities.ApiResponse;
 import com.market.list.utils.Constants;
