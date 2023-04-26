@@ -4,9 +4,9 @@ package com.market.list.services;
 import com.market.list.entities.Account;
 import com.market.list.entities.AccountRequest;
 import com.market.list.entities.Group;
-import com.market.list.exception.MarketException;
-import com.market.list.handler.EntityHandler;
-import com.market.list.handler.ValidatorHandlerImpl;
+import com.market.list.exceptions.MarketException;
+import com.market.list.handlers.EntityHandler;
+import com.market.list.handlers.ValidatorHandlerImpl;
 import com.market.list.repositories.AccountRepository;
 import com.market.list.utils.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +25,7 @@ public class AccountService {
     private final EntityHandler<Account> validationHandler;
 
     private final BCryptPasswordEncoder passwordEncoder;
+
     @Autowired
     public AccountService(AccountRepository accountRepository, ValidatorHandlerImpl<Account> validationHandler) {
         this.accountRepository = accountRepository;
@@ -74,9 +75,9 @@ public class AccountService {
 
     @Modifying
     @Transactional
-    public Account updateAccount(AccountRequest changes) throws MarketException{
+    public Account updateAccount(AccountRequest changes) throws MarketException {
         Account account = findAccount(changes.getId(), null);
-        if (wrongPassword(account.getPassword(),changes.getConfirmPassword())){
+        if (wrongPassword(account.getPassword(), changes.getConfirmPassword())) {
             throw new MarketException(Constants.INVALID_PASSWORD);
         }
 
@@ -129,6 +130,6 @@ public class AccountService {
     }
 
     public boolean wrongPassword(String password, String repeat) {
-        return !passwordEncoder.matches(repeat,password);
+        return !passwordEncoder.matches(repeat, password);
     }
 }

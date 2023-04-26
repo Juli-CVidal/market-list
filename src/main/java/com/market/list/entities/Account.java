@@ -1,6 +1,5 @@
 package com.market.list.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
@@ -43,7 +42,7 @@ public class Account {
     private String password;
 
 
-    @JsonIgnore
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @ManyToMany(mappedBy = "accounts")
     private List<Group> groups;
 

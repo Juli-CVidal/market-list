@@ -2,9 +2,9 @@ package com.market.list.services;
 
 
 import com.market.list.entities.Product;
-import com.market.list.exception.MarketException;
-import com.market.list.handler.EntityHandler;
-import com.market.list.handler.ValidatorHandlerImpl;
+import com.market.list.exceptions.MarketException;
+import com.market.list.handlers.EntityHandler;
+import com.market.list.handlers.ValidatorHandlerImpl;
 import com.market.list.repositories.ProductRepository;
 import com.market.list.utils.Constants;
 import org.springframework.beans.factory.annotation.Autowired;

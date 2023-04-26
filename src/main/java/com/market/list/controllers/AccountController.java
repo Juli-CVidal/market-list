@@ -3,8 +3,8 @@ package com.market.list.controllers;
 import com.market.list.entities.Account;
 import com.market.list.entities.AccountRequest;
 import com.market.list.entities.ApiResponse;
-import com.market.list.exception.MarketException;
-import com.market.list.handler.ApiHandler;
+import com.market.list.exceptions.MarketException;
+import com.market.list.handlers.ApiHandler;
 import com.market.list.services.AccountService;
 import com.market.list.utils.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,8 +36,8 @@ public class AccountController {
             return apiHandler.handleSuccessCreation(account, Constants.ACCOUNT_CREATED);
         } catch (MarketException me) {
             return apiHandler.handleExceptionMessage(account, Constants.ACCOUNT_HAS_ERRORS(me.getMessage()));
-        } catch (DataIntegrityViolationException dive){
-            return apiHandler.handleExceptionMessage(account,Constants.EXISTING_EMAIL);
+        } catch (DataIntegrityViolationException dive) {
+            return apiHandler.handleExceptionMessage(account, Constants.EXISTING_EMAIL);
         }
     }
 

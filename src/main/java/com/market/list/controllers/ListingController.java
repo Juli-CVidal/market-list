@@ -2,8 +2,8 @@ package com.market.list.controllers;
 
 import com.market.list.entities.ApiResponse;
 import com.market.list.entities.Listing;
-import com.market.list.exception.MarketException;
-import com.market.list.handler.ApiHandler;
+import com.market.list.exceptions.MarketException;
+import com.market.list.handlers.ApiHandler;
 import com.market.list.services.ListingService;
 import com.market.list.utils.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 public class ListingController {
 
     private final ListingService listingService;
-
 
     private final ApiHandler<Listing> apiHandler;
 
@@ -30,8 +29,12 @@ public class ListingController {
 
     @PostMapping
     public ResponseEntity<ApiResponse<Listing>> createListing(@RequestBody Listing listing) {
-        listingService.create(listing);
-        return apiHandler.handleSuccessCreation(listing, Constants.LISTING_CREATED);
+        try {
+            listingService.create(listing);
+            return apiHandler.handleSuccessCreation(listing, Constants.LISTING_CREATED);
+        } catch (MarketException me) {
+            return apiHandler.handleExceptionMessage(listing, Constants.LISTING_HAS_ERRORS(me.getMessage()));
+        }
     }
 
 
@@ -67,7 +70,7 @@ public class ListingController {
     // ======== DELETE ========
 
     @DeleteMapping("/delete")
-    public ResponseEntity<ApiResponse<Listing>> deleteAccount(@RequestParam(value = "id", required = false) String id) {
+    public ResponseEntity<ApiResponse<Listing>> deleteListing(@RequestParam(value = "id", required = false) String id) {
         try {
             if (isInvalidParam(id)) {
                 return apiHandler.handleBadRequest(Constants.NO_PARAMS);

@@ -1,7 +1,7 @@
 package com.market.list.entities;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,6 +9,7 @@ import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 
 @Getter
@@ -24,7 +25,10 @@ public class Listing {
     @GenericGenerator(name = "system-uuid", strategy = "uuid")
     private String id;
 
-    @JsonIgnore
+    @NotBlank(message = "Por favor ingrese un nombre")
+    private String name;
+
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @ManyToOne
     @JoinColumn(name = "group_id")
     private Group group;

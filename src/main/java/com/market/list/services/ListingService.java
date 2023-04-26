@@ -3,7 +3,9 @@ package com.market.list.services;
 import com.market.list.entities.Group;
 import com.market.list.entities.Listing;
 import com.market.list.entities.Product;
-import com.market.list.exception.MarketException;
+import com.market.list.exceptions.MarketException;
+import com.market.list.handlers.EntityHandler;
+import com.market.list.handlers.ValidatorHandlerImpl;
 import com.market.list.repositories.ListingRepository;
 import com.market.list.utils.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,18 +18,22 @@ public class ListingService {
 
     private final ListingRepository listingRepository;
 
+    private final EntityHandler<Listing> handler;
+
     private final ProductService productService;
 
     @Autowired
-    public ListingService(ListingRepository listingRepository, ProductService productService) {
+    public ListingService(ListingRepository listingRepository, ProductService productService, ValidatorHandlerImpl<Listing> handler) {
         this.listingRepository = listingRepository;
         this.productService = productService;
+        this.handler = handler;
     }
 
 
     // ======== CREATE ========
     @Transactional
-    public Listing create(Listing listing) {
+    public Listing create(Listing listing) throws MarketException {
+        handler.handle(listing);
         return listingRepository.save(listing);
     }
 
@@ -45,6 +51,7 @@ public class ListingService {
 
     @Transactional
     public void update(Listing listing) throws MarketException {
+        handler.handle(listing);
         listingRepository.save(listing);
     }
 

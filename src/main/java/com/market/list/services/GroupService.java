@@ -3,7 +3,7 @@ package com.market.list.services;
 import com.market.list.entities.Account;
 import com.market.list.entities.Group;
 import com.market.list.entities.Listing;
-import com.market.list.exception.MarketException;
+import com.market.list.exceptions.MarketException;
 import com.market.list.repositories.GroupRepository;
 import com.market.list.utils.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
