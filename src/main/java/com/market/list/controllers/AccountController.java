@@ -10,7 +10,10 @@ import com.market.list.utils.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpSession;
 
 @RestController
 @RequestMapping("/api/v1/account")
@@ -41,6 +44,13 @@ public class AccountController {
         }
     }
 
+
+    @GetMapping("/oauth2")
+    public ResponseEntity<ApiResponse<Account>> handleOAuth2Login(OAuth2AuthenticationToken token, HttpSession session) {
+        Account account = accountService.handleOAuth2Login(token);
+        session.setAttribute("account", account);
+        return apiHandler.handleSuccessLogin(account);
+    }
 
     // ======== READ ========
 

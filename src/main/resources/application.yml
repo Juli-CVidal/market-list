@@ -1,0 +1,35 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: remote
+    url: jdbc:mysql://192.168.1.35:3306/market_list
+    password: root
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+        format_sql: 'true'
+    hibernate:
+      ddl-auto: update
+  main:
+    banner-mode: 'off'
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 101252724565-c1pqca84trhk3tj8rgj9belb1k0nu2m5.apps.googleusercontent.com
+            client-secret: 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
+            scope: email
+logging:
+  pattern:
+    dateformat: HH:mm:ss
+  level:
+    org:
+      hibernate:
+        SQL: DEBUG
+        type:
+          descriptor:
+            sql: TRACE
+server:
+  port: '8080'

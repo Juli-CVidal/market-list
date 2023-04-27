@@ -1,6 +1,7 @@
 package com.market.list.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.market.list.enums.Provider;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -22,6 +23,10 @@ public class Account {
     @GeneratedValue(generator = "system-uuid")
     @GenericGenerator(name = "system-uuid", strategy = "uuid")
     private String id;
+
+    @Enumerated(EnumType.STRING)
+    private Provider provider;
+
 
     @NotBlank(message = "Por favor ingrese su nombre")
     @Column(nullable = false)

@@ -19,6 +19,7 @@ public class Constants {
 
     private static final String REMOVED_FROM_LIST = "se ha eliminado de la lista";
 
+    public static final String LOGGED_IN = "Sesión iniciada correctamente";
 
     // ======== ACCOUNT ========
 

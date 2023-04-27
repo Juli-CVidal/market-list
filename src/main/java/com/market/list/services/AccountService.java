@@ -4,6 +4,7 @@ package com.market.list.services;
 import com.market.list.entities.Account;
 import com.market.list.entities.AccountRequest;
 import com.market.list.entities.Group;
+import com.market.list.enums.Provider;
 import com.market.list.exceptions.MarketException;
 import com.market.list.handlers.EntityHandler;
 import com.market.list.handlers.ValidatorHandlerImpl;
@@ -12,6 +13,7 @@ import com.market.list.utils.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,6 +35,24 @@ public class AccountService {
         this.passwordEncoder = new BCryptPasswordEncoder();
     }
 
+    // ======== OAUTH2 HANDLER ========
+
+    public Account handleOAuth2Login(OAuth2AuthenticationToken token) {
+        String email = token.getPrincipal().getAttribute("email");
+        Optional<Account> accountOpt = accountRepository.findByEmail(email);
+        if (accountOpt.isPresent()){
+            return accountOpt.get();
+        }
+
+        Account account = new Account();
+        account.setEmail(email);
+        account.setName(token.getPrincipal().getAttribute("name"));
+        account.setPassword(passwordEncoder.encode("Logged with Google"));
+        account.setProvider(Provider.GOOGLE);
+        accountRepository.save(account);
+        return account;
+    }
+
 
     // ======== CREATE ========
 
@@ -42,8 +62,8 @@ public class AccountService {
         if (isInvalidPassword(account.getPassword())) {
             throw new MarketException(Constants.PASSWORD_REQUIREMENTS);
         }
+        account.setProvider(Provider.LOCAL);
         String password = passwordEncoder.encode(account.getPassword());
-        System.out.println(password);
         account.setPassword(password);
         return accountRepository.save(account);
     }
