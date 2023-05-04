@@ -49,13 +49,15 @@ public class ApiHandler<T> {
     public ResponseEntity<ApiResponse<T>> handleUnauthorized() {
         return handleResponse(HttpStatus.UNAUTHORIZED, null, Constants.UNAUTHORIZED);
     }
+
     public ResponseEntity<ApiResponse<T>> handleSuccessLogin(T entity) {
-        return handleResponse(HttpStatus.OK,entity,Constants.LOGGED_IN);
+        return handleResponse(HttpStatus.OK, entity, Constants.LOGGED_IN);
     }
 
     private ResponseEntity<ApiResponse<T>> handleResponse(HttpStatus status, T entity, String message) {
         return ResponseEntity.status(status).body(new ApiResponse<>(entity, status, message));
     }
+
 
 
 }

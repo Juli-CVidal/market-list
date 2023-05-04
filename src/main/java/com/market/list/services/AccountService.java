@@ -9,11 +9,12 @@ import com.market.list.exceptions.MarketException;
 import com.market.list.handlers.EntityHandler;
 import com.market.list.handlers.ValidatorHandlerImpl;
 import com.market.list.repositories.AccountRepository;
+import com.market.list.security.oauth.CustomOAuth2User;
 import com.market.list.utils.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,20 +38,14 @@ public class AccountService {
 
     // ======== OAUTH2 HANDLER ========
 
-    public Account handleOAuth2Login(OAuth2AuthenticationToken token) {
-        String email = token.getPrincipal().getAttribute("email");
-        Optional<Account> accountOpt = accountRepository.findByEmail(email);
-        if (accountOpt.isPresent()){
-            return accountOpt.get();
-        }
-
+    public void createViaOAuth2(String email, String name, Provider provider) {
         Account account = new Account();
         account.setEmail(email);
-        account.setName(token.getPrincipal().getAttribute("name"));
-        account.setPassword(passwordEncoder.encode("Logged with Google"));
-        account.setProvider(Provider.GOOGLE);
+        account.setName(name);
+        account.setPassword(passwordEncoder.encode(email));
+        account.setProvider(provider);
+
         accountRepository.save(account);
-        return account;
     }
 
 
@@ -84,6 +79,12 @@ public class AccountService {
         return account.orElseThrow(() -> new MarketException(Constants.NOT_FOUND));
     }
 
+
+    @Transactional(readOnly = true)
+    public Account getViaAuthentication(Authentication authentication) throws MarketException {
+        CustomOAuth2User oAuth2User = (CustomOAuth2User) authentication.getPrincipal();
+        return findAccount(null,oAuth2User.getEmail());
+    }
 
     // ======== UPDATE ========
 
@@ -152,4 +153,5 @@ public class AccountService {
     public boolean wrongPassword(String password, String repeat) {
         return !passwordEncoder.matches(repeat, password);
     }
+
 }

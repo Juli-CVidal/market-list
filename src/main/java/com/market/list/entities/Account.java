@@ -24,6 +24,7 @@ public class Account {
     @GenericGenerator(name = "system-uuid", strategy = "uuid")
     private String id;
 
+    @Column(length = 10)
     @Enumerated(EnumType.STRING)
     private Provider provider;
 

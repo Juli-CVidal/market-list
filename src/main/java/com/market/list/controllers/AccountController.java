@@ -5,15 +5,16 @@ import com.market.list.entities.AccountRequest;
 import com.market.list.entities.ApiResponse;
 import com.market.list.exceptions.MarketException;
 import com.market.list.handlers.ApiHandler;
+import com.market.list.security.oauth.CustomOAuth2User;
 import com.market.list.services.AccountService;
 import com.market.list.utils.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpSession;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/v1/account")
@@ -45,13 +46,6 @@ public class AccountController {
     }
 
 
-    @GetMapping("/oauth2")
-    public ResponseEntity<ApiResponse<Account>> handleOAuth2Login(OAuth2AuthenticationToken token, HttpSession session) {
-        Account account = accountService.handleOAuth2Login(token);
-        session.setAttribute("account", account);
-        return apiHandler.handleSuccessLogin(account);
-    }
-
     // ======== READ ========
 
     @GetMapping
@@ -70,9 +64,18 @@ public class AccountController {
     // ======== UPDATE ========
 
     @PutMapping
-    public ResponseEntity<ApiResponse<Account>> updateAccount(@RequestBody AccountRequest accountRequest) {
+    public ResponseEntity<ApiResponse<Account>> updateAccount(@RequestBody AccountRequest accountRequest, Authentication authentication) {
+        if (isNotAuthenticated(authentication)) {
+            return apiHandler.handleUnauthorized();
+        }
+
         try {
-            Account account = accountService.updateAccount(accountRequest);
+            Account account = accountService.getViaAuthentication(authentication);
+            if (isNotOwner(account.getId(),accountRequest.getId())){
+                return apiHandler.handleUnauthorized();
+            }
+
+            account = accountService.updateAccount(accountRequest);
             return apiHandler.handleSuccessModification(account, Constants.ACCOUNT_MODIFIED);
         } catch (MarketException me) {
             return apiHandler.handleExceptionMessage(null, Constants.ACCOUNT_HAS_ERRORS(me.getMessage()));
@@ -82,10 +85,19 @@ public class AccountController {
     // ======== DELETE ========
 
     @DeleteMapping("/delete")
-    public ResponseEntity<ApiResponse<Account>> deleteAccount(@RequestParam(value = "id", required = false) String id) {
+    public ResponseEntity<ApiResponse<Account>> deleteAccount(Authentication authentication, @RequestParam(value = "id", required = false) String id) {
+        if (isNotAuthenticated(authentication)){
+            return apiHandler.handleUnauthorized();
+        }
+
         try {
             if (isInvalidParam(id)) {
                 return apiHandler.handleBadRequest(Constants.NO_PARAMS);
+            }
+
+            Account account = accountService.getViaAuthentication(authentication);
+            if (isNotOwner(account.getId(),id)){
+                return apiHandler.handleUnauthorized();
             }
 
             accountService.delete(id);
@@ -100,5 +112,13 @@ public class AccountController {
 
     private boolean isInvalidParam(String param) {
         return null == param || param.isBlank();
+    }
+
+    private boolean isNotAuthenticated(Authentication authentication) {
+        return null == authentication || !authentication.isAuthenticated();
+    }
+
+    private boolean isNotOwner(String accountId, String paramId) {
+        return !Objects.equals(accountId, paramId);
     }
 }
