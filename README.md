@@ -73,7 +73,7 @@ The structure of the json is:
     preferredQuantity: 2
   },
   status: 'CREATED',
-  message: 'El producto se ha creado exitosamente!'
+  message: 'El producto se ha creado exitosamente!' //The product has been created successfully
 }
 ```
 * Not successful: 
@@ -81,7 +81,7 @@ The structure of the json is:
 {
   entity: null,
   status: 'BAD_REQUEST',
-  message: 'El elemento solicitado no ha sido encontrado'
+  message: 'El elemento solicitado no ha sido encontrado' //The requested element has not been found
 }
 ```
 
